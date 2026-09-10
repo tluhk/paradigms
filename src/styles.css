@@ -63,3 +63,14 @@
   .placement-dock .placement-status{padding:8px 12px}
   .placement-slot{scroll-margin-top:160px}
 }
+/* Both faces share a grid cell, so longer translations determine card height. */
+.learning-flip{perspective:1600px}
+.learning-flip-inner{display:grid;transform-style:preserve-3d;transition:transform .65s cubic-bezier(.22,.7,.25,1)}
+.learning-flip-inner.is-flipped{transform:rotateY(180deg)}
+.learning-face{grid-area:1/1;min-width:0;backface-visibility:hidden;-webkit-backface-visibility:hidden}
+.learning-face[aria-hidden=true]{pointer-events:none}
+.learning-front{display:flex;flex-direction:column;align-items:flex-start;background:radial-gradient(ellipse at top right,#e5edda,transparent 65%),#fffefa}
+.learning-front .reveal-area{align-self:stretch;margin:auto 0;padding:28px 0}
+.learning-back{transform:rotateY(180deg);background:#fffefa}
+.flip-back{margin-top:24px}
+@media(prefers-reduced-motion:reduce){.learning-flip{perspective:none}.learning-flip-inner,.learning-flip-inner.is-flipped,.learning-back{transform:none}.learning-face[aria-hidden=true]{visibility:hidden}}

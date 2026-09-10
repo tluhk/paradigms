@@ -54,6 +54,7 @@ const estonian: Record<string, string> = {
   "← Back to deck": "← Tagasi kaardipaki juurde",
   "FOUNDATIONS · LEARN": "ALUSED · ÕPI",
   "Take a moment. What does this concept mean to you?": "Mõtle korraks. Mida see mõiste sinu jaoks tähendab?",
+  "↶ Back to the term": "↶ Tagasi mõiste juurde",
   "Show explanation ↓": "Näita selgitust ↓",
   "IN A STUDY": "NÄIDE UURIMISTÖÖST",
   "MAKE THE DISTINCTION": "PANE TÄHELE ERINEVUST",

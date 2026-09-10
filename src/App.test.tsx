@@ -88,3 +88,18 @@ it('translates learning content and preserves an answered question across langua
   expect((screen.getByRole('combobox', { name: 'Keel' }) as HTMLSelectElement).value).toBe('et');
   expect(screen.getByText('1 mõistet 6-st harjutatud. Kiirustamata, ajapiiranguta.')).toBeTruthy();
 });
+
+it('flips learning cards back and forth with focus on the visible face', async () => {
+  const user = userEvent.setup();
+  render(<App />);
+  await user.click(screen.getByRole('button', { name: /Explore the cards/ }));
+  await user.click(screen.getByRole('button', { name: /Show explanation/ }));
+  expect(document.activeElement).toBe(screen.getByRole('heading', { level: 1 }));
+  expect(screen.queryByRole('button', { name: /Show explanation/ })).toBeNull();
+  await user.click(screen.getByRole('button', { name: /Back to the term/ }));
+  expect(screen.queryByRole('button', { name: /Back to the term/ })).toBeNull();
+  expect(document.activeElement).toBe(screen.getByRole('heading', { level: 1 }));
+  expect(JSON.parse(localStorage.getItem(STORAGE_KEY)!).cards.ontology.viewed).toBe(true);
+  await user.click(screen.getByRole('button', { name: /Next card/ }));
+  expect(screen.getByRole('button', { name: /Show explanation/ })).toBeTruthy();
+});
