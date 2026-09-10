@@ -4,7 +4,7 @@ const estonian: Record<string, string> = {
   "Place the cards": "Paiguta kaardid",
   "PLACE": "PAIGUTA",
   "Find a home for each concept.": "Leia igale mõistele õige koht.",
-  "Drag each card to its definition, or select a card and then a slot. Select a filled slot to return its card. Replacing a card returns it to the tray.": "Lohista kaart selle definitsiooni juurde või vali kaart ja seejärel koht. Kaardi tagastamiseks vali täidetud koht. Kaardi asendamisel liigub eelmine kaart tagasi valikusse.",
+  "Click a card, then click its definition. You can scroll between clicks — no need to hold or drag. You can also drag cards. Click a filled slot to return its card.": "Klõpsa kaardil ja seejärel selle definitsioonil. Klõpsude vahel võid kerida — kaarti ei pea all hoidma ega lohistama. Võid ka kaarte lohistada. Kaardi tagastamiseks klõpsa täidetud kohal.",
   "Concept cards": "Mõistekaardid",
   "All cards placed. Ready to check?": "Kõik kaardid on paigas. Kas kontrollime?",
   "Selected card": "Valitud kaart",

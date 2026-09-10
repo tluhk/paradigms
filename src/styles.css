@@ -43,3 +43,23 @@
 .primary:disabled{opacity:.45;cursor:default}
 .placement .actions{margin-bottom:24px}
 @media(max-width:560px){.placement-grid{grid-template-columns:1fr}.placement h1{font-size:38px}.card-tray{grid-template-columns:repeat(2,minmax(0,1fr));padding:16px;gap:14px}.concept-card{min-height:130px;font-size:23px;padding:55px 14px 18px}.placement-slot{padding:20px}}
+/* Keep the available cards beside the board while the page scrolls. */
+.play-area.placement-area{max-width:1100px}
+.placement-board{display:grid;grid-template-columns:280px minmax(0,1fr);gap:24px;align-items:start}
+.placement-dock{position:sticky;top:16px;min-width:0;border-radius:18px;background:#f7f8f2;max-height:calc(100dvh - 32px);overflow-y:auto;scrollbar-width:thin}
+.placement-dock .card-tray{grid-template-columns:repeat(2,minmax(0,1fr));padding:16px;gap:14px}
+.placement-dock .concept-card{min-height:115px;padding:48px 12px 16px;font-size:22px}
+.placement-dock .concept-card::before{top:14px;left:12px;width:20px;height:20px}
+.placement-dock .concept-card::after{top:14px;right:12px}
+.placement-dock .placement-status{margin:0;padding:16px 12px;font-size:12px;line-height:1.5;color:#486440}
+.has-selection .slot-target:not(:disabled){border-color:#557a42;background-color:#e5eedb;cursor:pointer}
+@media(max-width:800px){
+  .placement-board{grid-template-columns:1fr;gap:16px}
+  .placement-dock{top:0;z-index:2;overflow:visible;max-height:none;border-radius:0 0 14px 14px;box-shadow:0 8px 16px #334b3518}
+  .placement-dock .card-tray{display:flex;overflow-x:auto;min-height:0;padding:12px;gap:12px;border-radius:12px;scrollbar-width:thin}
+  .placement-dock .concept-card{flex:0 0 150px;min-height:72px;padding:14px;font-size:21px;align-items:center}
+  .placement-dock .concept-card::before,.placement-dock .concept-card::after{display:none}
+  .placement-dock .concept-card[aria-pressed=true]{transform:none}
+  .placement-dock .placement-status{padding:8px 12px}
+  .placement-slot{scroll-margin-top:160px}
+}

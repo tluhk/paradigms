@@ -65,7 +65,9 @@ export default function Placement({ concepts, language, onCheck }: {
   return <div className="placement">
     <span className="eyebrow">{t('FOUNDATIONS')} · {t('PLACE')}</span>
     <h1 ref={heading} tabIndex={-1}>{t('Find a home for each concept.')}</h1>
-    <p id="placement-help">{t('Drag each card to its definition, or select a card and then a slot. Select a filled slot to return its card. Replacing a card returns it to the tray.')}</p>
+    <p id="placement-help">{t('Click a card, then click its definition. You can scroll between clicks — no need to hold or drag. You can also drag cards. Click a filled slot to return its card.')}</p>
+    <div className={`placement-board ${selected ? 'has-selection' : ''}`}>
+    <aside className="placement-dock">
     <section className="card-tray" aria-label={t('Concept cards')} aria-describedby="placement-help">
       {cards.filter(id => !Object.values(placements).includes(id)).map(id => <button key={id} className="concept-card" draggable={!checked} disabled={checked} aria-pressed={selected === id}
         onClick={() => setSelected(selected === id ? null : id)}
@@ -74,6 +76,7 @@ export default function Placement({ concepts, language, onCheck }: {
       {Object.keys(placements).length === slots.length && <p>{t('All cards placed. Ready to check?')}</p>}
     </section>
     <p role="status" className="placement-status">{selected ? `${t('Selected card')}: ${concept(selected).term}` : `${Object.keys(placements).length} / 6 ${t('cards placed')}`}</p>
+    </aside>
     <div className="placement-grid">
       {slots.map((id, index) => <article key={id} className={`placement-slot ${checked ? placements[id] === id ? 'is-correct' : 'is-incorrect' : locked.includes(id) ? 'is-correct' : ''}`}>
         <span className="eyebrow">{String(index + 1).padStart(2, '0')}</span>
@@ -89,6 +92,7 @@ export default function Placement({ concepts, language, onCheck }: {
         </button>
         {(checked || locked.includes(id)) && <p className="placement-feedback">{placements[id] === id ? t('✓ Correct') : t('↻ Try another card')}</p>}
       </article>)}
+    </div>
     </div>
     <div className="placement-results" role="status">
       {checked && <><h2>{complete ? t('Connections made.') : t('Some cards need another home.')}</h2><p>{correct.length} / 6 {t('correct placements')}</p></>}
