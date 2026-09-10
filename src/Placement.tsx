@@ -78,7 +78,7 @@ export default function Placement({ concepts, language, onCheck }: {
       {slots.map((id, index) => <article key={id} className={`placement-slot ${checked ? placements[id] === id ? 'is-correct' : 'is-incorrect' : locked.includes(id) ? 'is-correct' : ''}`}>
         <span className="eyebrow">{String(index + 1).padStart(2, '0')}</span>
         <p id={`definition-${id}`}>{concept(id).definition}</p>
-        <button className="slot-target" aria-label={`${t('Place card')}: ${concept(id).definition}`} aria-describedby={`definition-${id}`} disabled={checked || locked.includes(id)}
+        <button className={`slot-target ${placements[id] ? 'has-card' : 'is-empty'}`} aria-label={`${t('Place card')}: ${concept(id).definition}`} aria-describedby={`definition-${id}`} disabled={checked || locked.includes(id)}
           onDragOver={event => { if (!checked && !locked.includes(id)) { event.preventDefault(); event.dataTransfer.dropEffect = 'move'; } }}
           onDrop={event => { event.preventDefault(); place(event.dataTransfer.getData('text/plain'), id); }}
           onClick={() => {
