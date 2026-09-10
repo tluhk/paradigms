@@ -15,6 +15,8 @@ export default function StudyBuilder({ language }: { language: Language }) {
   const [locked, setLocked] = useState<StudySlot[]>([]);
   const [firstScore, setFirstScore] = useState<number | null>(null);
   const [invalid, setInvalid] = useState(false);
+  const dragged = useRef<string | null>(null);
+  const [dropTarget, setDropTarget] = useState<StudySlot | null>(null);
   const heading = useRef<HTMLHeadingElement>(null);
   useEffect(() => { heading.current?.focus(); }, [index]);
   const slots = Object.keys(study.slots) as StudySlot[];
@@ -26,16 +28,17 @@ export default function StudyBuilder({ language }: { language: Language }) {
   const card = (id: string) => allCards.find(c => c.id === id)!;
   const available = [...new Set(editable.flatMap(slot => study.slots[slot]!.map(c => c.id)))].filter(id => !Object.values(answers).includes(id));
   function reset(next = index) {
+    dragged.current = null; setDropTarget(null);
     setIndex(next); setAnswers(studies[next].fixed); setSelected(null); setChecked(false); setLocked([]); setFirstScore(null); setInvalid(false);
   }
-  function place(slot: StudySlot) {
+  function place(slot: StudySlot, id = selected) {
     if (checked || study.fixed[slot] || locked.includes(slot)) return;
-    if (!selected) {
+    if (id === null) {
       setAnswers(previous => { const next = { ...previous }; delete next[slot]; return next; });
       return;
     }
-    if (!study.slots[slot]!.some(c => c.id === selected)) { setInvalid(true); return; }
-    setAnswers(previous => ({ ...previous, [slot]: selected }));
+    if (!available.includes(id) || !study.slots[slot]!.some(c => c.id === id)) { setInvalid(true); return; }
+    setAnswers(previous => ({ ...previous, [slot]: id }));
     setSelected(null); setInvalid(false);
   }
   function check() {
@@ -56,11 +59,19 @@ export default function StudyBuilder({ language }: { language: Language }) {
       {studies.map((item, i) => <button key={item.id} aria-pressed={index === i} onClick={() => reset(i)}><span>0{i + 1}</span>{item.title[language]}</button>)}
     </nav>
     <section className="study-brief"><span className="eyebrow">{say('RESEARCH QUESTION', 'UURIMISKÜSIMUS')}</span><h2>{study.question[language]}</h2><p>{study.brief[language]}</p></section>
-    <p>{say('Click a card, scroll normally, then click a slot. Click a filled slot to return its card. Given cards stay in place.', 'Klõpsa kaardil, keri tavaliselt ja klõpsa kohal. Kaardi tagastamiseks klõpsa täidetud kohal. Etteantud kaardid jäävad paika.')}</p>
+    <p>{say('Drag a card to a slot, or click a card, scroll normally, then click a slot. Click a filled slot to return its card. Given cards stay in place.', 'Lohista kaart kohale või klõpsa kaardil, keri tavaliselt ja klõpsa kohal. Kaardi tagastamiseks klõpsa täidetud kohal. Etteantud kaardid jäävad paika.')}</p>
     <div className={`placement-board study-board ${selected ? 'has-selection' : ''}`}>
       <aside className="placement-dock">
         <section className="card-tray" aria-label={say('Study cards', 'Uuringukaardid')}>
-          {available.map(id => <button className="concept-card" key={id} aria-pressed={selected === id} disabled={checked} title={card(id).definition} onClick={() => { setSelected(selected === id ? null : id); setInvalid(false); }}>{card(id).term}</button>)}
+          {available.map(id => <button className="concept-card" key={id} draggable={!checked}
+            onDragStart={event => {
+              dragged.current = id;
+              event.dataTransfer.setData('text/plain', id);
+              event.dataTransfer.effectAllowed = 'move';
+              setSelected(id); setInvalid(false);
+            }}
+            onDragEnd={() => { dragged.current = null; setDropTarget(null); setSelected(null); }}
+            aria-pressed={selected === id} disabled={checked} title={card(id).definition} onClick={() => { setSelected(selected === id ? null : id); setInvalid(false); }}>{card(id).term}</button>)}
         </section>
         <p className="placement-status" role="status">{invalid ? say('Choose a slot for this type of card.', 'Vali seda tüüpi kaardile sobiv koht.') : selected ? `${say('Selected', 'Valitud')}: ${card(selected).term}` : say('Select a card to connect it.', 'Seostamiseks vali kaart.')}</p>
         {selected && <><p className="selected-definition">{card(selected).definition}</p><ConceptReferences conceptId={selected} language={language} /></>}
@@ -71,7 +82,21 @@ export default function StudyBuilder({ language }: { language: Language }) {
           const fixed = Boolean(study.fixed[slot]);
           return <section key={slot} className={`study-node ${slot === 'paradigm' || slot === 'methodology' || slot === 'evaluation' ? 'study-root' : 'study-branch'} ${checked ? result.choice?.fits ? 'is-correct' : 'is-incorrect' : ''}`}>
             <h3><span>{String(i + 1).padStart(2, '0')}</span>{slotLabels[slot][language]} {fixed && <small>{say('Given', 'Ette antud')}</small>}</h3>
-            <button className={`slot-target ${answers[slot] ? 'has-card' : 'is-empty'}`} aria-label={`${say('Place', 'Paiguta')}: ${slotLabels[slot][language]}`} disabled={checked || fixed || locked.includes(slot)} onClick={() => place(slot)}>{answers[slot] ? card(answers[slot]!).term : say('Place a card here', 'Paiguta kaart siia')}</button>
+            <button className={`slot-target ${answers[slot] ? 'has-card' : 'is-empty'} ${dropTarget === slot ? 'drop-target' : ''}`} aria-label={`${say('Place', 'Paiguta')}: ${slotLabels[slot][language]}`} disabled={checked || fixed || locked.includes(slot)} onClick={() => place(slot)}
+              onDragOver={event => {
+                if (checked || fixed || locked.includes(slot) || !dragged.current) return;
+                event.preventDefault();
+                const fitsType = study.slots[slot]!.some(c => c.id === dragged.current);
+                event.dataTransfer.dropEffect = fitsType ? 'move' : 'none';
+                setDropTarget(fitsType ? slot : null);
+              }}
+              onDragLeave={() => setDropTarget(null)}
+              onDrop={event => {
+                event.preventDefault();
+                const id = event.dataTransfer.getData('text/plain');
+                if (dragged.current && id === dragged.current) place(slot, id);
+                dragged.current = null; setDropTarget(null); setSelected(null);
+              }}>{answers[slot] ? card(answers[slot]!).term : say('Place a card here', 'Paiguta kaart siia')}</button>
             {(checked || fixed || locked.includes(slot)) && result.choice && <p className="study-reason"><strong>{fixed ? say('Starting connection', 'Lähteseos') : result.choice.fits ? say('✓ Fits this brief', '✓ Sobib ülesandega') : say('↻ Reconsider this connection', '↻ Mõtle see seos uuesti läbi')}</strong>{result.choice.reason[language]}</p>}
             {answers[slot] && <ConceptReferences conceptId={answers[slot]!} language={language} />}
           </section>;

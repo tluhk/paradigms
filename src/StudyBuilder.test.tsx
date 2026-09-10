@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 import { afterEach, expect, it } from 'vitest';
-import { cleanup, render, screen } from '@testing-library/react';
+import { cleanup, fireEvent, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import App from './App';
 import StudyBuilder from './StudyBuilder';
@@ -122,4 +122,31 @@ it('requires evidence of usefulness instead of feature count and preserves the e
   await user.click(screen.getByRole('button', { name: 'Check connections' }));
   expect(screen.getByText('A connected research study.')).toBeTruthy();
   expect(screen.getByText('First attempt: 3 / 4')).toBeTruthy();
+});
+
+
+it('drags cards into slots, replaces cards, and rejects invalid or external drops', () => {
+  render(<StudyBuilder language="en" />);
+  function drag(term: string, slot: string) {
+    const source = screen.getByRole('button', { name: term });
+    expect(source.getAttribute('draggable')).toBe('true');
+    const data: Record<string, string> = {};
+    const dataTransfer = { setData: (key: string, value: string) => { data[key] = value; }, getData: (key: string) => data[key], effectAllowed: '', dropEffect: '' };
+    fireEvent.dragStart(source, { dataTransfer });
+    const target = screen.getByRole('button', { name: `Place: ${slot}` });
+    fireEvent.dragOver(target, { dataTransfer });
+    fireEvent.drop(target, { dataTransfer });
+    fireEvent.dragEnd(source, { dataTransfer });
+    return target;
+  }
+  expect(drag('Interview', 'Data collection').textContent).toBe('Interview');
+  expect(drag('Focus group', 'Data collection').textContent).toBe('Focus group');
+  expect(screen.getByRole('button', { name: 'Interview' })).toBeTruthy();
+  expect(drag('Interpretivism', 'Data analysis').textContent).toBe('Place a card here');
+  expect(screen.getByText('Choose a slot for this type of card.')).toBeTruthy();
+  expect(drag('Interpretivism', 'Methodology').textContent).toBe('Case study');
+  const collection = screen.getByRole('button', { name: 'Place: Data collection' });
+  fireEvent.drop(collection, { dataTransfer: { getData: () => 'interview' } });
+  expect(collection.textContent).toBe('Focus group');
+  expect(screen.getByRole('button', { name: 'Interpretivism' }).getAttribute('aria-pressed')).toBe('false');
 });

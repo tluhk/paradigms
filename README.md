@@ -21,7 +21,7 @@ Connect the decks in six guided scenarios:
 - **Education:** belonging at school, understanding feedback, and equitable classroom participation.
 - **Applied computing:** a campus room finder, an accessible course planner, and a lab equipment lending system.
 
-The computing scenarios ask students to build a prototype and choose how to evaluate whether it solves the problem. An additional **Application evaluation** slot connects research choices to realistic tasks, accessibility goals, or agreed requirements. Complete a partly filled tree linking a paradigm to a methodology and methods for data collection and analysis. Select a card, then its slot; the card tray stays visible as you scroll.
+The computing scenarios ask students to build a prototype and choose how to evaluate whether it solves the problem. An additional **Application evaluation** slot connects research choices to realistic tasks, accessibility goals, or agreed requirements. Complete a partly filled tree linking a paradigm to a methodology and methods for data collection and analysis. Drag a card into its slot, or select a card and then its slot; the card tray stays visible as you scroll.
 
 Feedback explains how each choice fits the specific brief. Some slots accept alternatives; the trees do not imply that methods belong exclusively to particular paradigms. Retry connections while keeping fitting choices and the first-attempt score. The activity is available in English and Estonian. Scenario progress lasts while the activity is open; changing scenarios starts a fresh tree.
 
