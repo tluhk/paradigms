@@ -43,3 +43,9 @@ Deployment configuration follows the [Vite GitHub Pages guide](https://vite.dev/
 - `PLAN.md`: scope, implementation checklist, and acceptance criteria.
 
 Definitions are introductory and terminology can vary by discipline. The initial content has been checked for internal matching consistency; subject-specialist review and testing with beginner learners remain recommended before treating it as validated teaching material.
+
+## Languages
+
+Use the **English / Eesti** selector in the header to switch languages at any time. Estonian includes all six concepts, definitions, examples, instructions, feedback, and results. The language preference is saved separately from learning progress, and switching language preserves the active round. English is the default. With browser storage unavailable, the choice remains available for the current session.
+
+Interface translations live in `src/i18n.ts`; Estonian card content lives in `src/content/foundations.et.ts`. Keep concept IDs and ordering aligned with the English deck so progress and questions remain shared across languages.

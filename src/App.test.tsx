@@ -54,3 +54,37 @@ it('completes a round, retries a missed card without changing initial score, and
   await user.click(screen.getByRole('button', { name: /Back to deck/ }));
   expect(screen.getByText('0 of 6 concepts practised. No rush, no timer.')).toBeTruthy();
 });
+
+it('translates learning content and preserves an answered question across language changes', async () => {
+  const { estonianConcepts } = await import('./content/foundations.et');
+  const user = userEvent.setup();
+  const view = render(<App />);
+  await user.selectOptions(screen.getByRole('combobox', { name: 'Language' }), 'et');
+  expect(document.documentElement.lang).toBe('et');
+  expect(document.title).toBe('Uurimiskaardid — Uurimistöö alused');
+  await user.click(screen.getByRole('button', { name: /Tutvu kaartidega/ }));
+  for (let i = 0; i < 6; i++) {
+    expect(screen.getByRole('heading', { level: 1 }).textContent).toBe(estonianConcepts[i].term);
+    await user.click(screen.getByRole('button', { name: /Näita selgitust/ }));
+    expect(screen.getByText(estonianConcepts[i].definition)).toBeTruthy();
+    expect(screen.getByText(estonianConcepts[i].example)).toBeTruthy();
+    expect(screen.getByText(estonianConcepts[i].distinction)).toBeTruthy();
+    await user.click(screen.getByRole('button', { name: i < 5 ? /Järgmine kaart/ : /Harjuta selle kaardipakiga/ }));
+  }
+  const term = screen.getByRole('heading', { level: 1 }).textContent!.replace(/\?$/, '');
+  const target = estonianConcepts.find(c => c.term === term)!;
+  const option = screen.getByText(target.definition).closest('button')!;
+  await user.click(option);
+  expect(screen.getByText('Õige vastus!')).toBeTruthy();
+  const saved = localStorage.getItem(STORAGE_KEY);
+  await user.selectOptions(screen.getByRole('combobox', { name: 'Keel' }), 'en');
+  expect(screen.getByRole('heading', { level: 1 }).textContent).toBe(concepts.find(c => c.id === target.id)!.term + '?');
+  expect(screen.getByText('That’s right.')).toBeTruthy();
+  expect((screen.getByText(concepts.find(c => c.id === target.id)!.definition).closest('button') as HTMLButtonElement).disabled).toBe(true);
+  expect(localStorage.getItem(STORAGE_KEY)).toBe(saved);
+  await user.selectOptions(screen.getByRole('combobox', { name: 'Language' }), 'et');
+  view.unmount();
+  render(<App />);
+  expect((screen.getByRole('combobox', { name: 'Keel' }) as HTMLSelectElement).value).toBe('et');
+  expect(screen.getByText('1 mõistet 6-st harjutatud. Kiirustamata, ajapiiranguta.')).toBeTruthy();
+});
