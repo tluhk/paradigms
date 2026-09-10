@@ -1,3 +1,4 @@
+import { ConceptReferences } from './References';
 import { useEffect, useRef, useState } from 'react';
 import { evaluationCards } from './content/computing-studies';
 import { decks } from './content/decks';
@@ -62,7 +63,7 @@ export default function StudyBuilder({ language }: { language: Language }) {
           {available.map(id => <button className="concept-card" key={id} aria-pressed={selected === id} disabled={checked} title={card(id).definition} onClick={() => { setSelected(selected === id ? null : id); setInvalid(false); }}>{card(id).term}</button>)}
         </section>
         <p className="placement-status" role="status">{invalid ? say('Choose a slot for this type of card.', 'Vali seda tüüpi kaardile sobiv koht.') : selected ? `${say('Selected', 'Valitud')}: ${card(selected).term}` : say('Select a card to connect it.', 'Seostamiseks vali kaart.')}</p>
-        {selected && <p className="selected-definition">{card(selected).definition}</p>}
+        {selected && <><p className="selected-definition">{card(selected).definition}</p><ConceptReferences conceptId={selected} language={language} /></>}
       </aside>
       <div className="study-tree">
         {slots.map((slot, i) => {
@@ -72,6 +73,7 @@ export default function StudyBuilder({ language }: { language: Language }) {
             <h3><span>{String(i + 1).padStart(2, '0')}</span>{slotLabels[slot][language]} {fixed && <small>{say('Given', 'Ette antud')}</small>}</h3>
             <button className={`slot-target ${answers[slot] ? 'has-card' : 'is-empty'}`} aria-label={`${say('Place', 'Paiguta')}: ${slotLabels[slot][language]}`} disabled={checked || fixed || locked.includes(slot)} onClick={() => place(slot)}>{answers[slot] ? card(answers[slot]!).term : say('Place a card here', 'Paiguta kaart siia')}</button>
             {(checked || fixed || locked.includes(slot)) && result.choice && <p className="study-reason"><strong>{fixed ? say('Starting connection', 'Lähteseos') : result.choice.fits ? say('✓ Fits this brief', '✓ Sobib ülesandega') : say('↻ Reconsider this connection', '↻ Mõtle see seos uuesti läbi')}</strong>{result.choice.reason[language]}</p>}
+            {answers[slot] && <ConceptReferences conceptId={answers[slot]!} language={language} />}
           </section>;
         })}
       </div>
@@ -86,6 +88,7 @@ export default function StudyBuilder({ language }: { language: Language }) {
       {complete && index < studies.length - 1 && <button className="primary" onClick={() => reset(index + 1)}>{say('Next scenario →', 'Järgmine olukord →')}</button>}
       <button className="secondary" onClick={() => reset()}>{say('Restart scenario', 'Alusta olukorda uuesti')}</button>
     </div>
+    <p className="study-note">{say('Scenarios and feedback are teaching examples. References explain the underlying concepts; they do not prescribe a single correct design.', 'Olukorrad ja tagasiside on õppenäited. Viited selgitavad aluseks olevaid mõisteid ega määra ühtainsat õiget uuringukava.')}</p>
     <p className="study-note">{say('Scenario progress lasts while this activity is open. Switching scenarios starts a fresh tree.', 'Olukorra edusammud säilivad tegevuse avatuna hoidmise ajal. Olukorra vahetamine alustab uut puud.')}</p>
   </div>;
 }

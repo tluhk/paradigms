@@ -29,6 +29,16 @@ The relationship model is informed by [Open University research on paradigms and
 
 The definitions are introductory; terminology can vary across disciplines.
 
+## References and content provenance
+
+Each learning card links to references for its concept. The study builder shows references for selected and placed cards, including paradigms and application evaluation choices. Open **References** in the footer for the complete bibliography organised by concept. Links open in a new tab so the activity stays in place.
+
+The bibliography covers all 22 learning concepts, three named paradigms, and four evaluation choices. It includes author names, publication dates where specified, titles, publication details, and DOI identifiers where available. English and Estonian share the same source mappings; original source titles are retained. Thematic analysis includes both the 2006 article and the authors’ subsequent teaching resources. Some publisher links may restrict full-text access.
+
+Definitions are introductory paraphrases. Examples, scenarios, and scoring rules are written for this game, not taken from empirical studies or endorsed by the cited authors. References support the underlying concepts; they do not establish exclusive paradigm–method pairings or validate the game as a teaching instrument. The Open University handbook is CC BY 4.0 and is attributed at chapter level.
+
+Maintain references in `src/content/references.ts`. When adding a concept, add its source mapping and verify the citation metadata and relevant source content. Automated tests check citation coverage and links in the interface; they do not assess scholarly validity or external website availability.
+
 ## Local development
 
 Built with React, TypeScript, and Vite. Requires Node.js 22 and npm.
@@ -55,6 +65,7 @@ The workflow tests, builds, and deploys the app. Open the site URL shown by the 
 - `src/content/decks.ts`: deck metadata and bilingual Methodology and Methods content.
 - `src/content/studies.ts`: bilingual scenarios, accepted connections, and explanatory feedback.
 - `src/content/computing-studies.ts`: computing scenarios and application evaluation cards.
+- `src/content/references.ts`: bibliography and concept-to-source mappings.
 - `src/i18n.ts`: interface translations.
 
 Keep concept IDs and ordering aligned across languages so questions and progress remain consistent.

@@ -1,3 +1,4 @@
+import References, { ConceptReferences } from './References';
 import StudyBuilder from './StudyBuilder';
 import Placement from './Placement';
 import { useEffect, useRef, useState } from 'react';
@@ -6,7 +7,7 @@ import { loadLanguage, saveLanguage, translate, type Language } from './i18n';
 import { createRound, missed, score, submit, type Round } from './game/round';
 import { emptyProgress, loadProgress, saveProgress, type Progress, STORAGE_KEY } from './storage/progress';
 
-type Screen = 'home' | 'learn' | 'practice' | 'summary' | 'placement' | 'study';
+type Screen = 'home' | 'learn' | 'practice' | 'summary' | 'placement' | 'study' | 'references';
 export default function App() {
   const [language, setLanguage] = useState<Language>(loadLanguage);
   const t = (text: string) => translate(language, text);
@@ -75,6 +76,7 @@ export default function App() {
         <section className="bottom-grid"><div className="how"><span className="eyebrow">{t("A SIMPLE WAY TO LEARN")}</span><div className="steps"><div><span>01</span><h3>{t("Explore")}</h3><p>{t("Reveal a definition and a real research example.")}</p></div><div><span>02</span><h3>{t("Connect")}</h3><p>{t("Match each concept to what it means.")}</p></div><div><span>03</span><h3>{t("Revisit")}</h3><p>{t("Give the tricky ones another go.")}</p></div></div></div><aside className="progress-box"><span className="eyebrow">{t("YOUR PROGRESS")}</span><strong>{viewed}<span>{` / ${concepts.length} ${language === 'et' ? 'kaardiga tutvutud' : 'cards explored'}`}</span></strong><progress value={viewed} max={concepts.length} aria-label={t("Cards explored")}/><p>{attempted}{language === 'et' ? ` mõistet ${concepts.length}-st harjutatud. Kiirustamata, ajapiiranguta.` : ` of ${concepts.length} concepts practised. No rush, no timer.`}</p></aside></section>
       </> : <section className={`play-area ${screen === 'placement' || screen === 'study' ? 'placement-area' : ''}`}>
         <button className="back" onClick={() => setScreen('home')}>{t("← Back to deck")}</button>
+        {screen === 'references' && <References language={language} />}
         {screen === 'study' && <StudyBuilder language={language} />}
         {screen === 'placement' && <Placement deckTitle={deck[language]} concepts={concepts} language={language} onCheck={answers => {
           const cards = { ...progress.cards };
@@ -90,6 +92,7 @@ export default function App() {
             <div className="learning-card learning-face learning-back" aria-hidden={!revealed} inert={!revealed}>
               <span className="pill">{card.cue}</span><h1 ref={index === cardIndex && revealed ? heading : undefined} tabIndex={-1}>{card.term}</h1>
               <div className="explanation"><p className="definition">{card.definition}</p><div className="example"><span className="eyebrow">{t("IN A STUDY")}</span><p>{card.example}</p></div><div className="distinction"><span className="eyebrow">{t("MAKE THE DISTINCTION")}</span><p>{card.distinction}</p></div></div>
+              <ConceptReferences conceptId={card.id} language={language} />
               <button className="secondary flip-back" onClick={() => setRevealed(false)}>{t("↶ Back to the term")}</button>
             </div>
           </div>
@@ -98,6 +101,6 @@ export default function App() {
         {screen === 'summary' && <div className="summary"><span className="eyebrow">{deck[language]} · {t('ROUND COMPLETE')}</span><h1 ref={heading} tabIndex={-1}>{missed(round).length ? t("Keep your curiosity.") : t("Connections made.")}</h1><div className="score">{initialScore}<span> / {round.initialTotal}</span></div><p>{t("Correct on your first attempt")}</p>{round.initialScore !== null && <p className="retry-note">{language === 'et' ? `Sellel kordamisel: ${score(round)} õiget vastust ${round.questions.length}-st.` : `This revisit: ${score(round)} of ${round.questions.length} correct.`}</p>}<div className="results">{round.questions.map(q => <div key={q.id}><span>{conceptById(q.id).term}</span><span>{q.answer === q.id ? t("✓ Correct") : t("↻ Revisit")}</span></div>)}</div><p>{missed(round).length ? t("Some ideas take another look. Revisit the cards you missed, whenever you’re ready.") : t("Try explaining these ideas in your own words, then return for another round.")}</p><div className="actions">{missed(round).length > 0 && <button className="primary" onClick={() => start(missed(round), initialScore)}>{t("Practise missed cards →")}</button>}<button className={missed(round).length ? 'secondary' : 'primary'} onClick={() => start()}>{t("New round ↗")}</button><button className="text-button" onClick={() => learn()}>{t("Back to learning")}</button></div></div>}
       </section>}
     </main>
-    <footer><div><strong>{t("Understanding starts with a question.")}</strong><p>{t("Introductory definitions; terminology can vary across disciplines.")}</p><p>{storageWorks ? t("Progress stays in this browser. Clearing browser data removes it.") : t("Browser storage is unavailable. Progress lasts for this session only.")}</p></div><div className="reset">{resetting ? <><span>{t("Delete your saved progress?")}</span><button className="text-button" onClick={() => { persist(emptyProgress(concepts)); setResetting(false); }}>{t("Yes, reset")}</button><button className="text-button" onClick={() => setResetting(false)}>{t("Cancel")}</button></> : <button className="text-button" onClick={() => setResetting(true)}>{t("Reset progress")}</button>}</div></footer>
+    <footer><div><strong>{t("Understanding starts with a question.")}</strong><p>{t("Introductory definitions; terminology can vary across disciplines.")}</p><p>{storageWorks ? t("Progress stays in this browser. Clearing browser data removes it.") : t("Browser storage is unavailable. Progress lasts for this session only.")}</p></div><div className="reset"><button className="text-button" onClick={() => setScreen('references')}>{language === 'et' ? 'Allikad' : 'References'}</button>{resetting ? <><span>{t("Delete your saved progress?")}</span><button className="text-button" onClick={() => { persist(emptyProgress(concepts)); setResetting(false); }}>{t("Yes, reset")}</button><button className="text-button" onClick={() => setResetting(false)}>{t("Cancel")}</button></> : <button className="text-button" onClick={() => setResetting(true)}>{t("Reset progress")}</button>}</div></footer>
   </>;
 }
