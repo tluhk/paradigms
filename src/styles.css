@@ -63,7 +63,12 @@
   .placement-dock .placement-status{padding:8px 12px}
   .placement-slot{scroll-margin-top:160px}
 }
-/* Both faces share a grid cell, so longer translations determine card height. */
+/* All cards share a grid cell: the tallest card sizes the entire deck.
+   Inactive cards retain their layout but are hidden and inert. */
+.learning-deck{display:grid}
+.learning-deck>.learning-flip{grid-area:1/1;min-width:0}
+.learning-deck>.learning-flip[aria-hidden=true]{visibility:hidden;pointer-events:none}
+.learning-deck .learning-flip-inner{height:100%}
 .learning-flip{perspective:1600px}
 .learning-flip-inner{display:grid;transform-style:preserve-3d;transition:transform .65s cubic-bezier(.22,.7,.25,1)}
 .learning-flip-inner.is-flipped{transform:rotateY(180deg)}
