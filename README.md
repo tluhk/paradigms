@@ -1,51 +1,39 @@
 # Research Cards
 
-A small web-based game for learning six foundations of research: ontology, epistemology, axiology, research paradigm, methodology, and method.
+Research Cards is an interactive learning app for beginners exploring the foundations of research. It helps learners understand six connected concepts: **ontology, epistemology, axiology, research paradigm, methodology, and method**.
 
-## Run locally
+The app is available in **English and Estonian (Eesti)** and offers two ways to learn:
 
-Requires Node.js 22 and npm.
+- **Explore the cards:** reveal definitions, guiding questions, research examples, and explanations of how similar concepts differ.
+- **Practise matching:** match concepts to definitions in six-question rounds, get explanatory feedback, review your first-attempt score, and retry missed cards.
+
+Learners can switch languages at any time without losing their active round. Progress and language preferences are saved in the browser, with no account or backend required. If browser storage is unavailable, the app works for the current session. Refreshing ends the active round.
+
+The definitions are introductory; terminology can vary across disciplines.
+
+## Local development
+
+Built with React, TypeScript, and Vite. Requires Node.js 22 and npm.
 
 ```sh
 npm ci
 npm run dev
 ```
 
-## Verify and preview
+Run tests with `npm test`, create a production build with `npm run build`, and preview it with `npm run preview`.
 
-```sh
-npm test
-npm run build
-npm run preview
-```
+## Deploy from your own repository
 
-Learn mode reveals definitions, guiding questions, examples, and distinctions. Practise mode presents six matching questions with explanatory feedback, a first-attempt score, and optional missed-card retries. Progress is stored only in this browser; if storage is blocked, the game continues in memory. Refreshing ends the current round.
+1. Fork this repository or copy it into your own GitHub repository, including `.github/workflows/deploy.yml`.
+2. In **Settings → Pages → Build and deployment**, select **GitHub Actions**. Enable workflows in the **Actions** tab if prompted.
+3. Push to `main`, or run **Build and deploy to GitHub Pages** from the **Actions** tab on `main`.
 
-## GitHub Pages
+The workflow tests, builds, and deploys the app. Open the site URL shown by the completed deployment. No repository-specific configuration changes are needed.
 
-The workflow in `.github/workflows/deploy.yml` tests and builds pull requests, then deploys pushes to `main`. It can also be run manually from the Actions tab on `main`.
+## Editing the learning content
 
-1. Push this project to `tluhk/paradigms` on GitHub.
-2. In repository **Settings → Pages → Build and deployment**, select **GitHub Actions** as the source.
-3. Push to `main` or run **Build and deploy to GitHub Pages** from Actions.
-4. When deployment succeeds, the expected address is **https://tluhk.github.io/paradigms/** (unless a custom domain is configured).
+- `src/content/foundations.ts`: English concepts, definitions, and examples.
+- `src/content/foundations.et.ts`: Estonian learning content.
+- `src/i18n.ts`: interface translations.
 
-Vite uses relative asset paths (`base: './'`) so the build works under the repository subpath. Navigation stays inside the application and does not require server-side route fallback. The workflow uploads `dist`; no generated build files need to be committed.
-
-Deployment configuration follows the [Vite GitHub Pages guide](https://vite.dev/guide/static-deploy#github-pages). Actual publication requires the workflow and repository Pages settings to be enabled; adding the workflow alone does not publish the game.
-
-## Content and implementation
-
-- `src/content/foundations.ts`: introductory content, examples, and distinctions.
-- `src/game/round.ts`: question generation, answer locking, and scoring.
-- `src/storage/progress.ts`: validated, versioned local progress.
-- `src/App.tsx`: learning and practice flows.
-- `PLAN.md`: scope, implementation checklist, and acceptance criteria.
-
-Definitions are introductory and terminology can vary by discipline. The initial content has been checked for internal matching consistency; subject-specialist review and testing with beginner learners remain recommended before treating it as validated teaching material.
-
-## Languages
-
-Use the **English / Eesti** selector in the header to switch languages at any time. Estonian includes all six concepts, definitions, examples, instructions, feedback, and results. The language preference is saved separately from learning progress, and switching language preserves the active round. English is the default. With browser storage unavailable, the choice remains available for the current session.
-
-Interface translations live in `src/i18n.ts`; Estonian card content lives in `src/content/foundations.et.ts`. Keep concept IDs and ordering aligned with the English deck so progress and questions remain shared across languages.
+Keep concept IDs and ordering aligned across languages so questions and progress remain consistent.
