@@ -11,8 +11,9 @@ function shuffle(ids: string[]) {
   return result;
 }
 
-export default function Placement({ concepts, language, onCheck }: {
+export default function Placement({ concepts, language, deckTitle, onCheck }: {
   concepts: Concept[];
+  deckTitle: string;
   language: Language;
   onCheck: (answers: { id: string; correct: boolean }[]) => void;
 }) {
@@ -63,7 +64,7 @@ export default function Placement({ concepts, language, onCheck }: {
   }
 
   return <div className="placement">
-    <span className="eyebrow">{t('FOUNDATIONS')} · {t('PLACE')}</span>
+    <span className="eyebrow">{deckTitle} · {t('PLACE')}</span>
     <h1 ref={heading} tabIndex={-1}>{t('Find a home for each concept.')}</h1>
     <p id="placement-help">{t('Click a card, then click its definition. You can scroll between clicks — no need to hold or drag. You can also drag cards. Click a filled slot to return its card.')}</p>
     <div className={`placement-board ${selected ? 'has-selection' : ''}`}>

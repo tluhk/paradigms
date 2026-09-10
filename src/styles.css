@@ -74,3 +74,4 @@
 .learning-back{transform:rotateY(180deg);background:#fffefa}
 .flip-back{margin-top:24px}
 @media(prefers-reduced-motion:reduce){.learning-flip{perspective:none}.learning-flip-inner,.learning-flip-inner.is-flipped,.learning-back{transform:none}.learning-face[aria-hidden=true]{visibility:hidden}}
+.deck-picker{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:0 0 22px}.deck-picker button{display:flex;align-items:center;gap:12px;padding:18px;border:1px solid #cbd5c5;border-radius:10px;background:#fffefa;color:#314c3e;text-align:left;font-weight:600;min-height:60px}.deck-picker button span{font-size:11px;opacity:.7}.deck-picker button[aria-pressed=true]{background:#285b49;border-color:#285b49;color:white}.deck-picker button:hover{box-shadow:0 4px 12px #334b3518}@media(max-width:560px){.deck-picker{grid-template-columns:1fr;gap:8px}.deck-picker button{padding:14px;min-height:48px}}

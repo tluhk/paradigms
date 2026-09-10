@@ -103,3 +103,41 @@ it('flips learning cards back and forth with focus on the visible face', async (
   await user.click(screen.getByRole('button', { name: /Next card/ }));
   expect(screen.getByRole('button', { name: /Show explanation/ })).toBeTruthy();
 });
+
+it('keeps new decks, questions, translations, and saved progress separate', async () => {
+  const { decks } = await import('./content/decks');
+  const user = userEvent.setup();
+  render(<App />);
+  for (const deck of decks.slice(1)) {
+    await user.click(screen.getByRole('button', { name: new RegExp(deck.en + '$') }));
+    await user.click(screen.getByRole('button', { name: /Explore the cards/ }));
+    await user.click(screen.getByRole('button', { name: /Show explanation/ }));
+    expect(screen.getByText(deck.cards.en[0].definition)).toBeTruthy();
+    await user.selectOptions(screen.getByRole('combobox', { name: 'Language' }), 'et');
+    expect(screen.getByText(deck.cards.et[0].definition)).toBeTruthy();
+    await user.selectOptions(screen.getByRole('combobox', { name: 'Keel' }), 'en');
+    await user.click(screen.getByRole('button', { name: /Back to deck/ }));
+    await user.click(screen.getByRole('button', { name: /Practise matching/ }));
+    for (let i = 0; i < 6; i++) {
+      const term = screen.getByRole('heading', { level: 1 }).textContent!.replace(/\?$/, '');
+      const target = deck.cards.en.find(c => c.term === term)!;
+      expect(target).toBeTruthy();
+      await user.click(screen.getByText(target.definition).closest('button')!);
+      await user.click(screen.getByRole('button', { name: i < 5 ? /Continue/ : /See results/ }));
+    }
+    expect(document.querySelector('.score')!.textContent).toBe('6 / 6');
+    await user.click(screen.getByRole('button', { name: /Back to deck/ }));
+    await user.click(screen.getByRole('button', { name: /Place the cards/ }));
+    for (const card of deck.cards.en) {
+      await user.click(screen.getByRole('button', { name: card.term }));
+      await user.click(screen.getByRole('button', { name: `Place card: ${card.definition}` }));
+    }
+    await user.click(screen.getByRole('button', { name: 'Check placements' }));
+    expect(screen.getByText('Connections made.')).toBeTruthy();
+    await user.click(screen.getByRole('button', { name: /Back to deck/ }));
+  }
+  await user.click(screen.getByRole('button', { name: /Foundations of research$/ }));
+  expect(screen.getByText('0 of 6 concepts practised. No rush, no timer.')).toBeTruthy();
+  await user.click(screen.getByRole('button', { name: /Methodology$/ }));
+  expect(screen.getByText('6 of 6 concepts practised. No rush, no timer.')).toBeTruthy();
+});

@@ -1,6 +1,9 @@
 export type Language = 'en' | 'et';
 export const LANGUAGE_KEY = 'research-cards-language';
 const estonian: Record<string, string> = {
+  "Choose a deck": "Vali kaardipakk",
+  "LEARN": "ÕPI",
+  "ROUND COMPLETE": "VOOR LÕPETATUD",
   "Place the cards": "Paiguta kaardid",
   "PLACE": "PAIGUTA",
   "Find a home for each concept.": "Leia igale mõistele õige koht.",
