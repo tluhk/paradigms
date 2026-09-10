@@ -1,6 +1,22 @@
 export type Language = 'en' | 'et';
 export const LANGUAGE_KEY = 'research-cards-language';
 const estonian: Record<string, string> = {
+  "Place the cards": "Paiguta kaardid",
+  "PLACE": "PAIGUTA",
+  "Find a home for each concept.": "Leia igale mõistele õige koht.",
+  "Drag each card to its definition, or select a card and then a slot. Select a filled slot to return its card. Replacing a card returns it to the tray.": "Lohista kaart selle definitsiooni juurde või vali kaart ja seejärel koht. Kaardi tagastamiseks vali täidetud koht. Kaardi asendamisel liigub eelmine kaart tagasi valikusse.",
+  "Concept cards": "Mõistekaardid",
+  "All cards placed. Ready to check?": "Kõik kaardid on paigas. Kas kontrollime?",
+  "Selected card": "Valitud kaart",
+  "cards placed": "kaarti paigas",
+  "Place card": "Paiguta kaart",
+  "Place a card here": "Paiguta kaart siia",
+  "↻ Try another card": "↻ Proovi teist kaarti",
+  "Some cards need another home.": "Mõni kaart vajab teist kohta.",
+  "correct placements": "õiget paigutust",
+  "Check placements": "Kontrolli paigutust",
+  "Retry incorrect cards": "Proovi valesti paigutatud kaarte uuesti",
+  "New placement round": "Uus paigutusvoor",
   "Skip to content": "Liigu põhisisu juurde",
   "Research Cards home": "Uurimiskaartide avaleht",
   "A little curiosity goes a long way.": "Uudishimu viib edasi.",

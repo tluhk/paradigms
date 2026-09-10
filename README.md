@@ -2,10 +2,11 @@
 
 Research Cards is an interactive learning app for beginners exploring the foundations of research. It helps learners understand six connected concepts: **ontology, epistemology, axiology, research paradigm, methodology, and method**.
 
-The app is available in **English and Estonian (Eesti)** and offers two ways to learn:
+The app is available in **English and Estonian (Eesti)** and offers three ways to learn:
 
 - **Explore the cards:** reveal definitions, guiding questions, research examples, and explanations of how similar concepts differ.
 - **Practise matching:** match concepts to definitions in six-question rounds, get explanatory feedback, review your first-attempt score, and retry missed cards.
+- **Place the cards:** drag concept cards into definition slots, or select a card and then a slot using touch or a keyboard. Check the completed board and retry incorrect cards while keeping correct placements and your first-attempt score.
 
 Learners can switch languages at any time without losing their active round. Progress and language preferences are saved in the browser, with no account or backend required. If browser storage is unavailable, the app works for the current session. Refreshing ends the active round.
 
