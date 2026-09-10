@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { evaluationCards } from './content/computing-studies';
 import { decks } from './content/decks';
 import { evaluateStudy, paradigms, slotLabels, studies, type StudySlot } from './content/studies';
 import type { Language } from './i18n';
@@ -20,7 +21,7 @@ export default function StudyBuilder({ language }: { language: Language }) {
   const editable = slots.filter(slot => !study.fixed[slot]);
   const score = results.filter(r => !study.fixed[r.slot] && r.choice?.fits).length;
   const complete = checked && results.every(r => r.choice?.fits);
-  const allCards = [...decks.slice(1).flatMap(deck => deck.cards[language]), ...paradigms.map(p => ({ id: p.id, term: p.term[language], definition: p.definition[language] }))];
+  const allCards = [...decks.slice(1).flatMap(deck => deck.cards[language]), ...[...paradigms, ...evaluationCards].map(p => ({ id: p.id, term: p.term[language], definition: p.definition[language] }))];
   const card = (id: string) => allCards.find(c => c.id === id)!;
   const available = [...new Set(editable.flatMap(slot => study.slots[slot]!.map(c => c.id)))].filter(id => !Object.values(answers).includes(id));
   function reset(next = index) {
@@ -67,7 +68,7 @@ export default function StudyBuilder({ language }: { language: Language }) {
         {slots.map((slot, i) => {
           const result = results.find(r => r.slot === slot)!;
           const fixed = Boolean(study.fixed[slot]);
-          return <section key={slot} className={`study-node ${slot === 'paradigm' || slot === 'methodology' ? 'study-root' : 'study-branch'} ${checked ? result.choice?.fits ? 'is-correct' : 'is-incorrect' : ''}`}>
+          return <section key={slot} className={`study-node ${slot === 'paradigm' || slot === 'methodology' || slot === 'evaluation' ? 'study-root' : 'study-branch'} ${checked ? result.choice?.fits ? 'is-correct' : 'is-incorrect' : ''}`}>
             <h3><span>{String(i + 1).padStart(2, '0')}</span>{slotLabels[slot][language]} {fixed && <small>{say('Given', 'Ette antud')}</small>}</h3>
             <button className={`slot-target ${answers[slot] ? 'has-card' : 'is-empty'}`} aria-label={`${say('Place', 'Paiguta')}: ${slotLabels[slot][language]}`} disabled={checked || fixed || locked.includes(slot)} onClick={() => place(slot)}>{answers[slot] ? card(answers[slot]!).term : say('Place a card here', 'Paiguta kaart siia')}</button>
             {(checked || fixed || locked.includes(slot)) && result.choice && <p className="study-reason"><strong>{fixed ? say('Starting connection', 'Lähteseos') : result.choice.fits ? say('✓ Fits this brief', '✓ Sobib ülesandega') : say('↻ Reconsider this connection', '↻ Mõtle see seos uuesti läbi')}</strong>{result.choice.reason[language]}</p>}

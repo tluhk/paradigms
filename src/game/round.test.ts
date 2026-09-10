@@ -49,3 +49,18 @@ describe('progress storage', () => {
     expect(saveProgress(emptyProgress())).toBe(false);
   });
 });
+
+it('extends saved decks without losing existing progress and keeps full retry totals', async () => {
+  const { decks } = await import('../content/decks');
+  for (const deck of decks.slice(1)) {
+    const previous = emptyProgress(deck.cards.en.slice(0, 6));
+    const id = deck.cards.en[0].id;
+    previous.cards[id] = { viewed: true, attempts: 3, correct: 2, latest: true };
+    const restored = parseProgress(JSON.stringify(previous), deck.cards.en);
+    expect(restored.cards[id]).toEqual(previous.cards[id]);
+    expect(Object.keys(restored.cards)).toHaveLength(8);
+    expect(restored.cards[deck.cards.en[7].id].attempts).toBe(0);
+    expect(createRound([deck.cards.en[7].id], 7, deck.cards.en).initialTotal).toBe(8);
+    expect(deck.cards.et.map(c => c.id)).toEqual(deck.cards.en.map(c => c.id));
+  }
+});

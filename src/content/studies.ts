@@ -1,10 +1,12 @@
+import { computingStudies } from './computing-studies';
 export type Bilingual = { en: string; et: string };
 const text = (en: string, et: string): Bilingual => ({ en, et });
-export type StudySlot = 'paradigm' | 'methodology' | 'collection' | 'collection2' | 'analysis';
+export type StudySlot = 'paradigm' | 'methodology' | 'collection' | 'collection2' | 'analysis' | 'evaluation';
 export const slotLabels: Record<StudySlot, Bilingual> = {
   paradigm: text('Paradigm', 'Paradigma'), methodology: text('Methodology', 'Metodoloogia'),
   collection: text('Data collection', 'Andmete kogumine'), collection2: text('Additional data collection', 'Täiendav andmete kogumine'),
   analysis: text('Data analysis', 'Andmeanalüüs'),
+  evaluation: text('Application evaluation', 'Rakenduse hindamine'),
 };
 export const paradigms = [
   { id: 'interpretivism', term: text('Interpretivism', 'Interpretivism'), definition: text('Understand how people interpret their experiences in context.', 'Mõista, kuidas inimesed oma kogemusi kontekstis tõlgendavad.') },
@@ -56,6 +58,7 @@ export const studies: Study[] = [
       analysis: [choice('descriptive-statistics', true, 'Frequencies summarise participation counts for joint reflection. Numbers can support transformative research, alongside participants’ perspectives.', 'Sagedused võtavad osalemiskorrad ühiseks refleksiooniks kokku. Arvud saavad koos osalejate vaatenurkadega toetada transformatiivset uuringut.'), choice('thematic-analysis', false, 'Thematic analysis suits qualitative accounts, but this slot asks you to summarise participation counts.', 'Temaatiline analüüs sobib kvalitatiivsete kirjelduste jaoks, kuid siin tuleb kokku võtta osalemiskordade arvud.')],
     },
   },
+  ...computingStudies,
 ];
 export function evaluateStudy(study: Study, answers: Partial<Record<StudySlot, string>>) {
   return (Object.keys(study.slots) as StudySlot[]).map(slot => ({ slot, choice: study.slots[slot]!.find(c => c.id === answers[slot]) }));

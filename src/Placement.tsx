@@ -76,7 +76,7 @@ export default function Placement({ concepts, language, deckTitle, onCheck }: {
         onDragEnd={() => setSelected(null)}>{concept(id).term}</button>)}
       {Object.keys(placements).length === slots.length && <p>{t('All cards placed. Ready to check?')}</p>}
     </section>
-    <p role="status" className="placement-status">{selected ? `${t('Selected card')}: ${concept(selected).term}` : `${Object.keys(placements).length} / 6 ${t('cards placed')}`}</p>
+    <p role="status" className="placement-status">{selected ? `${t('Selected card')}: ${concept(selected).term}` : `${Object.keys(placements).length} / ${slots.length} ${t('cards placed')}`}</p>
     </aside>
     <div className="placement-grid">
       {slots.map((id, index) => <article key={id} className={`placement-slot ${checked ? placements[id] === id ? 'is-correct' : 'is-incorrect' : locked.includes(id) ? 'is-correct' : ''}`}>
@@ -96,8 +96,8 @@ export default function Placement({ concepts, language, deckTitle, onCheck }: {
     </div>
     </div>
     <div className="placement-results" role="status">
-      {checked && <><h2>{complete ? t('Connections made.') : t('Some cards need another home.')}</h2><p>{correct.length} / 6 {t('correct placements')}</p></>}
-      {firstScore !== null && <p>{t('Correct on your first attempt')}: {firstScore} / 6</p>}
+      {checked && <><h2>{complete ? t('Connections made.') : t('Some cards need another home.')}</h2><p>{correct.length} / {slots.length} {t('correct placements')}</p></>}
+      {firstScore !== null && <p>{t('Correct on your first attempt')}: {firstScore} / {slots.length}</p>}
     </div>
     <div className="actions">
       {!checked && <button className="primary" disabled={Object.keys(placements).length !== slots.length} onClick={check}>{t('Check placements')}</button>}

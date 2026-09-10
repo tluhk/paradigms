@@ -10,6 +10,7 @@ export function parseProgress(raw: string | null, pool = concepts): Progress {
     const clean = emptyProgress(pool);
     for (const c of pool) {
       const e = value.cards[c.id];
+      if (e === undefined) continue; // Newly added cards start fresh without erasing existing progress.
       if (!e || typeof e.viewed !== 'boolean' || !Number.isSafeInteger(e.attempts) || e.attempts < 0 || !Number.isSafeInteger(e.correct) || e.correct < 0 || e.correct > e.attempts || !(e.latest === null || typeof e.latest === 'boolean')) return emptyProgress(pool);
       clean.cards[c.id] = { viewed: e.viewed, attempts: e.attempts, correct: e.correct, latest: e.latest };
     }

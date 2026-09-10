@@ -118,14 +118,14 @@ it('keeps new decks, questions, translations, and saved progress separate', asyn
     await user.selectOptions(screen.getByRole('combobox', { name: 'Keel' }), 'en');
     await user.click(screen.getByRole('button', { name: /Back to deck/ }));
     await user.click(screen.getByRole('button', { name: /Practise matching/ }));
-    for (let i = 0; i < 6; i++) {
+    for (let i = 0; i < deck.cards.en.length; i++) {
       const term = screen.getByRole('heading', { level: 1 }).textContent!.replace(/\?$/, '');
       const target = deck.cards.en.find(c => c.term === term)!;
       expect(target).toBeTruthy();
       await user.click(screen.getByText(target.definition).closest('button')!);
-      await user.click(screen.getByRole('button', { name: i < 5 ? /Continue/ : /See results/ }));
+      await user.click(screen.getByRole('button', { name: i < deck.cards.en.length - 1 ? /Continue/ : /See results/ }));
     }
-    expect(document.querySelector('.score')!.textContent).toBe('6 / 6');
+    expect(document.querySelector('.score')!.textContent).toBe(`${deck.cards.en.length} / ${deck.cards.en.length}`);
     await user.click(screen.getByRole('button', { name: /Back to deck/ }));
     await user.click(screen.getByRole('button', { name: /Place the cards/ }));
     for (const card of deck.cards.en) {
@@ -139,5 +139,19 @@ it('keeps new decks, questions, translations, and saved progress separate', asyn
   await user.click(screen.getByRole('button', { name: /Foundations of research$/ }));
   expect(screen.getByText('0 of 6 concepts practised. No rush, no timer.')).toBeTruthy();
   await user.click(screen.getByRole('button', { name: /Methodology$/ }));
-  expect(screen.getByText('6 of 6 concepts practised. No rush, no timer.')).toBeTruthy();
+  expect(screen.getByText('8 of 8 concepts practised. No rush, no timer.')).toBeTruthy();
+});
+
+it('reaches the added learning cards and starts practice only after the last card', async () => {
+  const { decks } = await import('./content/decks');
+  const user = userEvent.setup();
+  render(<App />);
+  await user.click(screen.getByRole('button', { name: /Methodology$/ }));
+  await user.click(screen.getByRole('button', { name: /Explore the cards/ }));
+  for (let i = 0; i < 8; i++) {
+    expect(screen.getByText(`Card ${i + 1} of 8`)).toBeTruthy();
+    expect(screen.getByRole('heading', { level: 1 }).textContent).toBe(decks[1].cards.en[i].term);
+    await user.click(screen.getByRole('button', { name: i < 7 ? /Next card/ : /Practise this deck/ }));
+  }
+  expect(screen.getByText('Question 1 of 8')).toBeTruthy();
 });
