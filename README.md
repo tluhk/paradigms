@@ -14,6 +14,14 @@ The app is available in **English and Estonian (Eesti)** and offers three ways t
 
 Learners can switch languages at any time without losing their active round. Progress is saved separately for each deck, and language preferences are saved in the browser, with no account or backend required. If browser storage is unavailable, the app works for the current session. Refreshing ends the active round.
 
+## Build a research study
+
+Connect the decks in three guided scenarios: belonging at school, understanding feedback, and equitable classroom participation. Complete a partly filled tree linking a paradigm to a methodology and methods for data collection and analysis. Select a card, then its slot; the card tray stays visible as you scroll.
+
+Feedback explains how each choice fits the specific brief. Some slots accept alternatives; the trees do not imply that methods belong exclusively to particular paradigms. Retry connections while keeping fitting choices and the first-attempt score. The activity is available in English and Estonian. Scenario progress lasts while the activity is open; changing scenarios starts a fresh tree.
+
+The relationship model is informed by [Open University research on paradigms and methods](https://oro.open.ac.uk/29480/) and its [research design teaching material](https://www.open.edu/openlearn/mod/oucontent/view.php?id=114270&section=4). Scenarios and feedback are introductory teaching examples.
+
 The definitions are introductory; terminology can vary across disciplines.
 
 ## Local development
@@ -40,6 +48,7 @@ The workflow tests, builds, and deploys the app. Open the site URL shown by the 
 - `src/content/foundations.ts`: English concepts, definitions, and examples.
 - `src/content/foundations.et.ts`: Estonian learning content.
 - `src/content/decks.ts`: deck metadata and bilingual Methodology and Methods content.
+- `src/content/studies.ts`: bilingual scenarios, accepted connections, and explanatory feedback.
 - `src/i18n.ts`: interface translations.
 
 Keep concept IDs and ordering aligned across languages so questions and progress remain consistent.
