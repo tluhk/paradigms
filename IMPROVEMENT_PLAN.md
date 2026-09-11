@@ -13,7 +13,7 @@ Help students progress from recognising terminology to explaining, designing, an
 3. [x] **Explain your choice** — add guided justification questions after scenario placements, with explanatory feedback and examples. Distinguish recognising a definition from applying it. Keep first-attempt results separate from retries; do not automatically grade unrestricted writing as factually right or wrong.
 4. [x] **Evaluate connections together** — check data collection against analysis and evaluation against research questions. Explain context-dependent alternatives rather than treating paradigms as exclusive owners of methods. Test combinations, not only individual slots.
 5. [x] **Research quality decisions** — introduce sampling, participant selection, bias, consent/privacy, validity, reliability/trustworthiness, and limitations through short lessons and scenario choices. Source the material and explain disciplinary differences.
-6. [ ] **Interpret evidence** — add small, explicitly fictional datasets: task times, success rates, errors, interview excerpts. Ask what can be concluded, what cannot, and how findings should inform a prototype revision.
+6. [x] **Interpret evidence** — add small, explicitly fictional datasets: task times, success rates, errors, interview excerpts. Ask what can be concluded, what cannot, and how findings should inform a prototype revision.
 7. [ ] **Design my own study** — support an application problem, research question, justified paradigm/methodology/methods, participants, evaluation criteria, and limitations. Save drafts; export a readable one-page research plan with references. Clearly distinguish building an artifact from producing research knowledge.
 8. [ ] **Useful progress overview** — show viewed, practised, and completed separately; record scenario completion and suggest concepts to revisit without claiming validated mastery. Provide a clear reset/export experience.
 9. [ ] **Interaction and reading polish** — move placed cards between slots; compact source disclosures without destabilising cards; direct navigation to concepts/scenarios and helpful browser history. Check long translations and small screens.
@@ -88,3 +88,16 @@ Sources checked: Baltes & Ralph’s sampling review (arXiv v6, 2021); Open Unive
 Validation: all 46 tests pass; production build and whitespace checks pass. Tests cover all nine scenarios in both languages, source coverage, keyboard input, first-answer preservation on retry, storage validation/failure fallback, References plus reload restoration, and clearing quality practice on restart. No real-browser visual check or external teaching review was performed.
 
 Next: Step 6, interpret fictional evidence and its implications for a prototype.
+
+
+### Step 6 — Interpret fictional evidence
+
+Status: Implemented and verified with automated tests.
+
+Delivered: optional evidence exercises after checking the room finder, accessible planner, and equipment lending trees. Each has eight explicitly fictional task records, two invented participant excerpts, calculated success rates/median successful times/total errors, and three bilingual interpretation decisions. Feedback links observations and excerpts to limitations and a prototype revision requiring retesting. Task criteria and timing rules are stated; failed attempts remain visible, and changing successful subsets and mixed participant roles are discussed where relevant. No inferential test or universal effectiveness claim is implied.
+
+Answers and open panels persist per scenario; retries preserve first answers, References navigation preserves drafts, and scenario restart clears them. Evidence results are independent of tree and quality results. Versioned draft validation restarts obsolete exercise data safely. Sources for methods appear with answer feedback; NIST usability guidance and W3C user-evaluation guidance were checked. Sources are explicitly distinguished from the invented observations.
+
+Validation: all 51 tests pass; production build and whitespace checks pass. Tests verify summary arithmetic (including no-success/empty inputs), record/source consistency, all three exercises in both languages, accessible table structure and keyboard answering, retry/reload/language preservation, version and choice validation, storage-failure memory fallback, and References/reload/restart integration with unchanged placement scores. No real-browser visual check or external teaching review was performed.
+
+Next: Step 7, design and export a study for the learner’s own application problem.
