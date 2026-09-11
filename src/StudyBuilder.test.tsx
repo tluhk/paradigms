@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 import { afterEach, expect, it } from 'vitest';
-import { cleanup, fireEvent, render, screen } from '@testing-library/react';
+import { cleanup, fireEvent, render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import App from './App';
 import StudyBuilder from './StudyBuilder';
@@ -101,6 +101,8 @@ it('completes computing scenarios in both languages, including application evalu
       await user.click(screen.getByRole('button', { name: language === 'en' ? 'Check connections' : 'Kontrolli seoseid' }));
       expect(screen.getByText(language === 'en' ? 'A connected research study.' : 'Seostatud uuring.')).toBeTruthy();
       expect(screen.getByText(language === 'en' ? 'First attempt: 4 / 4' : 'Esimene katse: 4 / 4')).toBeTruthy();
+      const review = within(screen.getByRole('region', { name: language === 'en' ? 'How the choices work together' : 'Kuidas valikud koos toimivad' }));
+      expect(review.getAllByText(language === 'en' ? '✓ Coherent for this brief' : '✓ Selle ülesande jaoks kooskõlaline')).toHaveLength(2);
     }
     view.unmount();
   }
@@ -116,6 +118,8 @@ it('requires evidence of usefulness instead of feature count and preserves the e
   }
   await user.click(screen.getByRole('button', { name: 'Check connections' }));
   expect(screen.getByText(/Feature count measures output/)).toBeTruthy();
+  expect(screen.getByText('↻ Review this combination')).toBeTruthy();
+  expect(screen.getByText(/Feature output alone cannot establish usefulness/)).toBeTruthy();
   await user.click(screen.getByRole('button', { name: 'Retry connections' }));
   expect((screen.getByRole('button', { name: 'Place: Methodology' }) as HTMLButtonElement).disabled).toBe(true);
   await user.click(screen.getByRole('button', { name: 'Evaluate agreed requirements' }));

@@ -27,6 +27,8 @@ The computing scenarios ask students to build a prototype and choose how to eval
 
 Feedback explains how each choice fits the specific brief. Some slots accept alternatives; the trees do not imply that methods belong exclusively to particular paradigms. Retry connections while keeping fitting choices and the first-attempt score. The activity is available in English and Estonian. Each scenario keeps its own draft and completion mark across navigation and refresh. Restart scenario clears that tree and its attempt score while retaining its completion mark.
 
+After checking a tree, **How the choices work together** reviews combinations against the brief: data collection and analysis, integration of evidence, and (in computing scenarios) evaluation against the research question. It shows the selected chain and explains what makes it coherent or what needs revision. Completion requires both fitting individual choices and coherent combinations. The first-attempt score still counts individual placements; combination checks add no points. Supported alternatives remain valid, and these checks are specific to the teaching scenarios rather than universal method rules.
+
 After checking a tree, **Explain your choices** offers a prompt for each chosen connection and a question about limitations or alternatives. Write your reasoning, then compare it with feedback and an example drawn from the scenario’s existing explanations. Notes are optional and ungraded: placement scores and completion marks still describe card choices only. Notes are saved separately for each scenario, slot, and chosen card, survive language changes and refresh, and are cleared by Restart scenario.
 
 The relationship model is informed by [Open University research on paradigms and methods](https://oro.open.ac.uk/29480/) and its [research design teaching material](https://www.open.edu/openlearn/mod/oucontent/view.php?id=114270&section=4). Computing content also draws on [design science research education](https://aisel.aisnet.org/jise/vol34/iss3/2/), [NIST usability testing](https://www.nist.gov/programs-projects/usability-testing), and [W3C guidance on involving users in accessibility evaluation](https://www.w3.org/WAI/test-evaluate/involving-users/). Scenarios and feedback are introductory teaching examples.
@@ -70,6 +72,7 @@ The workflow tests, builds, and deploys the app. Open the site URL shown by the 
 - `src/content/foundations.et.ts`: Estonian learning content.
 - `src/content/decks.ts`: deck metadata and bilingual Methodology and Methods content.
 - `src/content/studies.ts`: bilingual scenarios, accepted connections, and explanatory feedback.
+- `src/content/connections.ts`: explicit scenario combination rules and bilingual feedback. Keep these aligned with changes to scenario briefs and choices.
 - `src/content/computing-studies.ts`: computing scenarios and application evaluation cards.
 - `src/content/paradigms.ts`: bilingual paradigm cards and their philosophical assumptions, shared with scenarios.
 - `src/content/references.ts`: bibliography and concept-to-source mappings.

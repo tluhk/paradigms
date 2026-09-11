@@ -1,3 +1,4 @@
+import { evaluateConnections, retryStudySlots } from './content/connections';
 import StudyReflection from './StudyReflection';
 import { createSessionStore, validStudy, type SessionStore } from './storage/sessions';
 import { ConceptReferences } from './References';
@@ -28,7 +29,9 @@ export default function StudyBuilder({ language, sessions: suppliedSessions, onS
   const results = evaluateStudy(study, answers);
   const editable = slots.filter(slot => !study.fixed[slot]);
   const score = results.filter(r => !study.fixed[r.slot] && r.choice?.fits).length;
-  const complete = checked && results.every(r => r.choice?.fits);
+  const connections = evaluateConnections(study, answers);
+  const connectionsFit = connections.every(r => r.status === 'fits');
+  const complete = checked && results.every(r => r.choice?.fits) && connectionsFit;
   const allCards = [...decks.slice(1).flatMap(deck => deck.cards[language]), ...evaluationCards.map(p => ({ id: p.id, term: p.term[language], definition: p.definition[language] }))];
   const card = (id: string) => allCards.find(c => c.id === id)!;
   const available = [...new Set(editable.flatMap(slot => study.slots[slot]!.map(c => c.id)))].filter(id => !Object.values(answers).includes(id));
@@ -58,12 +61,12 @@ export default function StudyBuilder({ language, sessions: suppliedSessions, onS
   }
   function check() {
     if (checked || slots.some(slot => !answers[slot])) return;
-    if (results.every(r => r.choice?.fits)) setCompleted(previous => [...new Set([...previous, study.id])]);
+    if (results.every(r => r.choice?.fits) && connectionsFit) setCompleted(previous => [...new Set([...previous, study.id])]);
     setChecked(true); setSelected(null); setInvalid(false);
     if (firstScore === null) setFirstScore(score);
   }
   function retry() {
-    const fits = results.filter(r => r.choice?.fits).map(r => r.slot);
+    const fits = retryStudySlots(study, answers);
     setAnswers(Object.fromEntries(fits.map(slot => [slot, answers[slot]])));
     setLocked(fits); setChecked(false); setInvalid(false);
   }
@@ -129,6 +132,16 @@ export default function StudyBuilder({ language, sessions: suppliedSessions, onS
       {complete && index < studies.length - 1 && <button className="primary" onClick={() => reset(index + 1, false)}>{say('Next scenario →', 'Järgmine olukord →')}</button>}
       <button className="secondary" onClick={() => reset()}>{say('Restart scenario', 'Alusta olukorda uuesti')}</button>
     </div>
+    {checked && <section className="connection-review" aria-labelledby="connection-heading">
+      <h2 id="connection-heading">{say('How the choices work together', 'Kuidas valikud koos toimivad')}</h2>
+      <p>{say('These checks compare the selected combinations with this brief. They do not establish universal paradigm–method pairings or grade your written explanation. Your first-attempt score still counts individual card placements.', 'Need kontrollid võrdlevad valitud kombinatsioone selle ülesandega. Need ei määra üldkehtivaid paradigma ja meetodi paare ega hinda kirjalikku selgitust. Esimese katse tulemus loendab endiselt üksikuid kaardipaigutusi.')}</p>
+      {connections.map(connection => <article className="reflection-card" key={connection.id}>
+        <h3>{connection.title[language]}</h3>
+        <p className="small-note">{connection.slots.map(slot => `${slotLabels[slot][language]}: ${card(answers[slot]!).term}`).join(' → ')}</p>
+        <strong>{connection.status === 'fits' ? say('✓ Coherent for this brief', '✓ Selle ülesande jaoks kooskõlaline') : say('↻ Review this combination', '↻ Vaata see kombinatsioon üle')}</strong>
+        <p>{(connection.status === 'fits' ? connection.fits : connection.reconsider)[language]}</p>
+      </article>)}
+    </section>}
     {checked && <section className="study-reflections" aria-labelledby="reflection-heading">
       <h2 id="reflection-heading">{say('Explain your choices', 'Põhjenda oma valikuid')}</h2>
       <p>{say('Move from recognising cards to explaining this study. Use details from the research brief in your own words, then compare with an example. These optional notes are saved with this scenario; they are not automatically graded and do not change your placement score or completion mark.', 'Liigu kaartide äratundmiselt uuringu selgitamiseni. Kasuta oma sõnadega ülesande üksikasju ja võrdle seejärel näitega. Need vabatahtlikud märkmed salvestatakse selle olukorra juurde; neid ei hinnata automaatselt ning need ei muuda paigutuste tulemust ega lõpetamise märki.')}</p>

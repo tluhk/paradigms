@@ -11,7 +11,7 @@ Help students progress from recognising terminology to explaining, designing, an
 1. [x] **Paradigms learning deck** — teach interpretivism, pragmatism, critical/transformative approaches, and postpositivism. Include definitions, examples, distinctions, and ontology/epistemology/axiology connections. Support all existing game modes, citations, and separate progress. Reuse the same content in scenarios.
 2. [x] **Resume unfinished work** — persist active learning, matching, placement, and study sessions; retain separate scenario drafts and completions. Restore after refresh and navigation. Opening References must not discard work. Validate stored state and gracefully handle unavailable storage.
 3. [x] **Explain your choice** — add guided justification questions after scenario placements, with explanatory feedback and examples. Distinguish recognising a definition from applying it. Keep first-attempt results separate from retries; do not automatically grade unrestricted writing as factually right or wrong.
-4. [ ] **Evaluate connections together** — check data collection against analysis and evaluation against research questions. Explain context-dependent alternatives rather than treating paradigms as exclusive owners of methods. Test combinations, not only individual slots.
+4. [x] **Evaluate connections together** — check data collection against analysis and evaluation against research questions. Explain context-dependent alternatives rather than treating paradigms as exclusive owners of methods. Test combinations, not only individual slots.
 5. [ ] **Research quality decisions** — introduce sampling, participant selection, bias, consent/privacy, validity, reliability/trustworthiness, and limitations through short lessons and scenario choices. Source the material and explain disciplinary differences.
 6. [ ] **Interpret evidence** — add small, explicitly fictional datasets: task times, success rates, errors, interview excerpts. Ask what can be concluded, what cannot, and how findings should inform a prototype revision.
 7. [ ] **Design my own study** — support an application problem, research question, justified paradigm/methodology/methods, participants, evaluation criteria, and limitations. Save drafts; export a readable one-page research plan with references. Clearly distinguish building an artifact from producing research knowledge.
@@ -54,4 +54,12 @@ Delivered: optional guided reflections for each editable connection after checki
 
 Validation: all 35 tests pass; production build and whitespace checks pass. Tests cover bilingual saved reflections, corrective comparisons, choice-specific drafts, unchanged placement scores, and clearing notes on restart. Existing six-scenario and retry tests pass. No real-browser visual check or external teaching review was performed. Examples reuse the existing sourced scenario reasoning; the prompts are teaching scaffolds, not a validated assessment rubric.
 
-Next: Step 4, evaluate connections together.
+### Step 4 — Evaluate connections together
+
+Status: Implemented and verified with automated tests.
+
+Delivered: explicit combination rules for all six scenarios, covering collection/analysis, integration, and computing evaluation against the research question. A bilingual review displays the chosen chain and contextual feedback, including supported alternatives and limits of the evidence. Completion now requires coherent combinations as well as fitting cards. Placement scores remain unchanged; retries preserve correct cards while allowing an individually fitting but conflicting combination to be revised. Existing reflection notes remain separate and ungraded.
+
+Validation: all 39 tests pass; production build and whitespace checks pass. Tests enumerate every supported combination, check mismatches and incomplete chains, cover evaluation goals and conflict retries, and verify bilingual review feedback in computing scenarios. No real-browser visual check or external teaching review was performed. Feedback elaborates the existing teaching briefs and their evidence requirements; rules do not claim universal compatibility or validated assessment.
+
+Next: Step 5, research quality decisions.
