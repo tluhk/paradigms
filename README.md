@@ -1,12 +1,11 @@
 # Research Cards
 
-Research Cards is an interactive learning app for beginners exploring the foundations of research. It includes four decks: six Foundations cards, eight Methodology cards, eight Methods cards, and seven Paradigms cards:
+Research Cards is an interactive learning app for beginners exploring the foundations of research. It includes four decks: six Foundations cards, seven Paradigms cards, eight Methodology cards, and eight Methods cards, in that suggested learning order:
 
 - **Foundations:** ontology, epistemology, axiology, research paradigm, methodology, and method.
+- **Paradigms:** interpretivism, pragmatism, critical/transformative approaches, postpositivism, positivism, constructivism, and critical realism, with links to ontology, epistemology, and axiology.
 - **Methodology:** case study, ethnography, phenomenology, grounded theory, action research, mixed methods research, design science research, and experimental design.
 - **Methods:** interview, questionnaire, observation, focus group, thematic analysis, descriptive statistics, usability testing, and requirements interviews.
-
-- **Paradigms:** interpretivism, pragmatism, critical/transformative approaches, postpositivism, positivism, constructivism, and critical realism, with links to ontology, epistemology, and axiology.
 
 The app is available in **English and Estonian (Eesti)** and offers three ways to learn:
 

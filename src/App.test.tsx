@@ -152,7 +152,7 @@ it('reaches the added learning cards and starts practice only after the last car
   await user.click(screen.getByRole('button', { name: /Explore the cards/ }));
   for (let i = 0; i < 8; i++) {
     expect(screen.getByText(`Card ${i + 1} of 8`)).toBeTruthy();
-    expect(screen.getByRole('heading', { level: 1 }).textContent).toBe(decks[1].cards.en[i].term);
+    expect(screen.getByRole('heading', { level: 1 }).textContent).toBe(decks.find(deck => deck.id === 'methodologies')!.cards.en[i].term);
     await user.click(screen.getByRole('button', { name: i < 7 ? /Next card/ : /Practise this deck/ }));
   }
   expect(screen.getByText('Question 1 of 8')).toBeTruthy();
