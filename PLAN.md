@@ -1,5 +1,7 @@
 # Research Cards — planning and execution document
 
+For the current roadmap and implementation progress, see [IMPROVEMENT_PLAN.md](IMPROVEMENT_PLAN.md). This document records the original release.
+
 Status: First implementation complete; automated checks pass. Browser visual checks, learner review, and publication are pending.  
 Date: 10 September 2026  
 Working title: Research Cards
