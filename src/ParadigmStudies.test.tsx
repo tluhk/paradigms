@@ -36,7 +36,7 @@ it('plays the new scenarios in both languages with alternative paradigm justific
   }
 });
 it('preserves progress on the original cards while safely restarting obsolete four-card rounds', () => {
-  const original = paradigmCards.en.slice(0, 4);
+  const original = ['interpretivism', 'pragmatism', 'critical', 'postpositivism'].map(id => paradigmCards.en.find(c => c.id === id)!);
   const saved = emptyProgress(original);
   saved.cards.interpretivism = { viewed: true, attempts: 3, correct: 2, latest: true };
   const restored = parseProgress(JSON.stringify(saved), paradigmCards.en);

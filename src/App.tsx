@@ -34,7 +34,7 @@ export default function App() {
   const [screen, setScreen] = useState<Screen>(() => restoredScreen(navigation?.screen ?? 'home'));
   const [returnScreen, setReturnScreen] = useState<Screen>(() => restoredScreen(navigation?.returnScreen ?? 'home'));
   const [practiceStarted, setPracticeStarted] = useState(draft?.practiceStarted ?? false);
-  const [cardIndex, setCardIndex] = useState(draft?.cardIndex ?? 0);
+  const [cardIndex, setCardIndex] = useState(() => draft ? concepts.findIndex(c => c.id === draft.ids[draft.cardIndex]) : 0);
   const [revealed, setRevealed] = useState(draft?.revealed ?? false);
   const [round, setRound] = useState<Round>(() => draft?.round ?? createRound(concepts.map(c => c.id), null, concepts));
   const [progress, setProgress] = useState(() => loadProgress(concepts, storageKey));
@@ -54,7 +54,7 @@ export default function App() {
   function chooseDeck(index: number) {
     const next = decks[index];
     const saved = sessions.read(`deck:${next.id}`, validDeck(next.cards.en.map(c => c.id)));
-    setDeckIndex(index); setCardIndex(saved?.cardIndex ?? 0); setRevealed(saved?.revealed ?? false);
+    setDeckIndex(index); setCardIndex(saved ? next.cards.en.findIndex(c => c.id === saved.ids[saved.cardIndex]) : 0); setRevealed(saved?.revealed ?? false);
     setPracticeStarted(saved?.practiceStarted ?? false); answerLock.current = false;
     setRound(saved?.round ?? createRound(next.cards.en.map(c => c.id), null, next.cards.en));
     setProgress(loadProgress(next.cards.en, index === 0 ? STORAGE_KEY : `${STORAGE_KEY}-${next.id}`));

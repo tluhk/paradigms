@@ -92,3 +92,22 @@ it('rejects corrupt and obsolete drafts without discarding other valid drafts', 
   expect(validPlacement(ids)({ slots: ids, cards: ids, placements: { ontology: 'unknown' }, checked: false, locked: [], firstScore: null })).toBe(false);
   expect(validStudy(studies[0])({ answers: {}, checked: true, locked: [], firstScore: 0 })).toBe(false);
 });
+
+it('restores the same learning concept when a deck has been reordered', async () => {
+  const { decks } = await import('./content/decks');
+  const deck = decks.find(d => d.id === 'methods')!;
+  const previousIds = ['interview', 'questionnaire', 'observation', 'focus-group', 'thematic-analysis', 'descriptive-statistics', 'usability-testing', 'requirements-interview'];
+  const store = createSessionStore();
+  store.write(`deck:${deck.id}`, { ids: previousIds, cardIndex: 1, revealed: true, round: createRound(previousIds, null, deck.cards.en), practiceStarted: false });
+  store.write('navigation', { deckId: deck.id, screen: 'learn', returnScreen: 'home' });
+  const user = userEvent.setup();
+  render(<App />);
+  expect(screen.getByRole('heading', { level: 1 }).textContent).toBe('Questionnaire');
+  expect(screen.getByRole('button', { name: /Back to the term/ })).toBeTruthy();
+  await user.click(screen.getByRole('button', { name: /Back to deck/ }));
+  // Also check reading an older draft when switching decks during the session.
+  await user.click(screen.getByRole('button', { name: /Foundations of research$/ }));
+  await user.click(screen.getByRole('button', { name: /Methods$/ }));
+  await user.click(screen.getByRole('button', { name: /Explore the cards/ }));
+  expect(screen.getByRole('heading', { level: 1 }).textContent).toBe('Questionnaire');
+});
