@@ -1,3 +1,4 @@
+import { createSessionStore, validStudy, type SessionStore } from './storage/sessions';
 import { ConceptReferences } from './References';
 import { useEffect, useRef, useState } from 'react';
 import { evaluationCards } from './content/computing-studies';
@@ -5,15 +6,18 @@ import { decks } from './content/decks';
 import { evaluateStudy, slotLabels, studies, type StudySlot } from './content/studies';
 import type { Language } from './i18n';
 
-export default function StudyBuilder({ language }: { language: Language }) {
+export default function StudyBuilder({ language, sessions: suppliedSessions, onStorageError }: { language: Language; sessions?: SessionStore; onStorageError?: () => void }) {
   const say = (en: string, et: string) => language === 'et' ? et : en;
-  const [index, setIndex] = useState(0);
+  const [sessions] = useState(() => suppliedSessions ?? createSessionStore());
+  const [index, setIndex] = useState(() => { const id = sessions.read('study-current', (v): v is string => typeof v === 'string' && studies.some(s => s.id === v)); return Math.max(0, studies.findIndex(s => s.id === id)); });
   const study = studies[index];
-  const [answers, setAnswers] = useState<Partial<Record<StudySlot, string>>>(study.fixed);
+  const [completed, setCompleted] = useState<string[]>(() => sessions.read('study-completed', (v): v is string[] => Array.isArray(v) && v.every(id => studies.some(s => s.id === id))) ?? []);
+  const [draft] = useState(() => sessions.read(`study:${study.id}`, validStudy(study)));
+  const [answers, setAnswers] = useState<Partial<Record<StudySlot, string>>>(draft?.answers ?? study.fixed);
   const [selected, setSelected] = useState<string | null>(null);
-  const [checked, setChecked] = useState(false);
-  const [locked, setLocked] = useState<StudySlot[]>([]);
-  const [firstScore, setFirstScore] = useState<number | null>(null);
+  const [checked, setChecked] = useState(draft?.checked ?? false);
+  const [locked, setLocked] = useState<StudySlot[]>(draft?.locked ?? []);
+  const [firstScore, setFirstScore] = useState<number | null>(draft?.firstScore ?? null);
   const [invalid, setInvalid] = useState(false);
   const dragged = useRef<string | null>(null);
   const [dropTarget, setDropTarget] = useState<StudySlot | null>(null);
@@ -27,9 +31,16 @@ export default function StudyBuilder({ language }: { language: Language }) {
   const allCards = [...decks.slice(1).flatMap(deck => deck.cards[language]), ...evaluationCards.map(p => ({ id: p.id, term: p.term[language], definition: p.definition[language] }))];
   const card = (id: string) => allCards.find(c => c.id === id)!;
   const available = [...new Set(editable.flatMap(slot => study.slots[slot]!.map(c => c.id)))].filter(id => !Object.values(answers).includes(id));
-  function reset(next = index) {
+  useEffect(() => {
+    const ok = sessions.write(`study:${study.id}`, { answers, checked, locked, firstScore });
+    const navOk = sessions.write('study-current', study.id);
+    const completedOk = sessions.write('study-completed', completed);
+    if (!ok || !navOk || !completedOk) onStorageError?.();
+  }, [sessions, study.id, answers, checked, locked, firstScore, completed, onStorageError]);
+  function reset(next = index, fresh = true) {
     dragged.current = null; setDropTarget(null);
-    setIndex(next); setAnswers(studies[next].fixed); setSelected(null); setChecked(false); setLocked([]); setFirstScore(null); setInvalid(false);
+    const saved = fresh ? undefined : sessions.read(`study:${studies[next].id}`, validStudy(studies[next]));
+    setIndex(next); setAnswers(saved?.answers ?? studies[next].fixed); setSelected(null); setChecked(saved?.checked ?? false); setLocked(saved?.locked ?? []); setFirstScore(saved?.firstScore ?? null); setInvalid(false);
   }
   function place(slot: StudySlot, id = selected) {
     if (checked || study.fixed[slot] || locked.includes(slot)) return;
@@ -43,6 +54,7 @@ export default function StudyBuilder({ language }: { language: Language }) {
   }
   function check() {
     if (checked || slots.some(slot => !answers[slot])) return;
+    if (results.every(r => r.choice?.fits)) setCompleted(previous => [...new Set([...previous, study.id])]);
     setChecked(true); setSelected(null); setInvalid(false);
     if (firstScore === null) setFirstScore(score);
   }
@@ -56,7 +68,7 @@ export default function StudyBuilder({ language }: { language: Language }) {
     <h1 ref={heading} tabIndex={-1}>{say('Build a research study', 'Koosta uuring')}</h1>
     <p>{say('Complete a guided tree. These are plausible designs for specific briefs, not universal rules about which methods belong to a paradigm.', 'Täienda juhendatud puud. Need on konkreetsete ülesannete jaoks sobivad uuringud, mitte üldreeglid selle kohta, millised meetodid kuuluvad paradigma juurde.')}</p>
     <nav className="deck-picker" aria-label={say('Research scenarios', 'Uurimisolukorrad')}>
-      {studies.map((item, i) => <button key={item.id} aria-pressed={index === i} onClick={() => reset(i)}><span>0{i + 1}</span>{item.title[language]}</button>)}
+      {studies.map((item, i) => <button key={item.id} aria-pressed={index === i} onClick={() => reset(i, false)}><span>0{i + 1}{completed.includes(item.id) && <span aria-label={say('Completed', 'Lõpetatud')}> ✓</span>}</span>{item.title[language]}</button>)}
     </nav>
     <section className="study-brief"><span className="eyebrow">{say('RESEARCH QUESTION', 'UURIMISKÜSIMUS')}</span><h2>{study.question[language]}</h2><p>{study.brief[language]}</p></section>
     <p>{say('Drag a card to a slot, or click a card, scroll normally, then click a slot. Click a filled slot to return its card. Given cards stay in place.', 'Lohista kaart kohale või klõpsa kaardil, keri tavaliselt ja klõpsa kohal. Kaardi tagastamiseks klõpsa täidetud kohal. Etteantud kaardid jäävad paika.')}</p>
@@ -110,10 +122,10 @@ export default function StudyBuilder({ language }: { language: Language }) {
     <div className="actions">
       {!checked && <button className="primary" disabled={slots.some(slot => !answers[slot])} onClick={check}>{say('Check connections', 'Kontrolli seoseid')}</button>}
       {checked && !complete && <button className="primary" onClick={retry}>{say('Retry connections', 'Proovi seoseid uuesti')}</button>}
-      {complete && index < studies.length - 1 && <button className="primary" onClick={() => reset(index + 1)}>{say('Next scenario →', 'Järgmine olukord →')}</button>}
+      {complete && index < studies.length - 1 && <button className="primary" onClick={() => reset(index + 1, false)}>{say('Next scenario →', 'Järgmine olukord →')}</button>}
       <button className="secondary" onClick={() => reset()}>{say('Restart scenario', 'Alusta olukorda uuesti')}</button>
     </div>
     <p className="study-note">{say('Scenarios and feedback are teaching examples. References explain the underlying concepts; they do not prescribe a single correct design.', 'Olukorrad ja tagasiside on õppenäited. Viited selgitavad aluseks olevaid mõisteid ega määra ühtainsat õiget uuringukava.')}</p>
-    <p className="study-note">{say('Scenario progress lasts while this activity is open. Switching scenarios starts a fresh tree.', 'Olukorra edusammud säilivad tegevuse avatuna hoidmise ajal. Olukorra vahetamine alustab uut puud.')}</p>
+    <p className="study-note">{say('Switch scenarios to resume drafts. When browser storage is available, drafts and completion marks survive refresh. Restart scenario clears the current tree but keeps its completion mark.', 'Mustandi jätkamiseks vaheta olukorda. Kui brauseri salvestusruum on saadaval, säilivad mustandid ja lõpetamise märgid ka lehe värskendamisel. Uuesti alustamine tühjendab praeguse puu, kuid säilitab lõpetamise märgi.')}</p>
   </div>;
 }

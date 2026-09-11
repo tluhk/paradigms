@@ -86,6 +86,7 @@ it('completes computing scenarios in both languages, including application evalu
   const { paradigms, slotLabels } = await import('./content/studies');
   const user = userEvent.setup();
   for (const language of ['en', 'et'] as const) {
+    localStorage.clear();
     const view = render(<StudyBuilder language={language} />);
     const cards = [...decks.flatMap(d => d.cards[language]), ...[...paradigms, ...evaluationCards].map(c => ({ id: c.id, term: c.term[language] }))];
     for (const study of computingStudies) {

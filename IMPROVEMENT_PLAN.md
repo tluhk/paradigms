@@ -9,7 +9,7 @@ Help students progress from recognising terminology to explaining, designing, an
 ## Ordered steps
 
 1. [x] **Paradigms learning deck** — teach interpretivism, pragmatism, critical/transformative approaches, and postpositivism. Include definitions, examples, distinctions, and ontology/epistemology/axiology connections. Support all existing game modes, citations, and separate progress. Reuse the same content in scenarios.
-2. [ ] **Resume unfinished work** — persist active learning, matching, placement, and study sessions; retain separate scenario drafts and completions. Restore after refresh and navigation. Opening References must not discard work. Validate stored state and gracefully handle unavailable storage.
+2. [x] **Resume unfinished work** — persist active learning, matching, placement, and study sessions; retain separate scenario drafts and completions. Restore after refresh and navigation. Opening References must not discard work. Validate stored state and gracefully handle unavailable storage.
 3. [ ] **Explain your choice** — add guided justification questions after scenario placements, with explanatory feedback and examples. Distinguish recognising a definition from applying it. Keep first-attempt results separate from retries; do not automatically grade unrestricted writing as factually right or wrong.
 4. [ ] **Evaluate connections together** — check data collection against analysis and evaluation against research questions. Explain context-dependent alternatives rather than treating paradigms as exclusive owners of methods. Test combinations, not only individual slots.
 5. [ ] **Research quality decisions** — introduce sampling, participant selection, bias, consent/privacy, validity, reliability/trustworthiness, and limitations through short lessons and scenario choices. Source the material and explain disciplinary differences.
@@ -38,4 +38,12 @@ Delivered: four bilingual cards with philosophical assumptions, a fourth deck us
 
 Validation: all 27 tests pass; production build and whitespace checks pass. Tests cover the four-card learning flow, bilingual assumptions and references, separate saved progress, and matching/placement through the shared deck tests. Existing education and computing scenarios still pass. No real-browser visual check or external teaching review was performed for this step.
 
-Next: Step 2, resume unfinished work, including preserving study trees when opening References and restoring activities after refresh.
+### Step 2 — Resume unfinished work
+
+Status: Implemented and verified with automated tests.
+
+Delivered: versioned, validated browser session storage; learning position and flip state; matching answers and round order; placement boards, checked results, and retry state; separate study drafts and persistent completion marks. References returns to the previous activity, including after refresh. Drafts remain in memory during navigation when browser storage is unavailable. Deck reset clears that deck’s activities; scenario restart clears its draft while retaining completion.
+
+Validation: all 32 tests pass; production build and whitespace checks pass. New tests cover References/reload restoration, partial and checked placement boards without duplicate progress, separate scenario drafts and completion, unavailable storage, and corrupt/obsolete drafts. The existing bilingual matching test now checks restored feedback without another recorded attempt. No real-browser interaction check was performed for this step.
+
+Next: Step 3, guided explanations of scenario choices.

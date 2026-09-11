@@ -14,7 +14,7 @@ The app is available in **English and Estonian (Eesti)** and offers three ways t
 - **Practise matching:** match concepts to definitions in rounds covering the selected deck, get explanatory feedback, review your first-attempt score, and retry missed cards.
 - **Place the cards:** drag concept cards into definition slots, or select a card and then a slot using touch or a keyboard. Check the completed board and retry incorrect cards while keeping correct placements and your first-attempt score.
 
-Learners can switch languages at any time without losing their active round. Progress is saved separately for each deck, and language preferences are saved in the browser, with no account or backend required. If browser storage is unavailable, the app works for the current session. Refreshing ends the active round.
+Learners can switch languages at any time without losing their active round. Progress is saved separately for each deck, and language preferences are saved in the browser, with no account or backend required. Learning cards, matching rounds, and placement boards resume after navigation or refresh, including answers, feedback, and retry scores. Opening References preserves the activity and provides a return button. If browser storage is unavailable, activity drafts remain available while navigating the open app but are lost on refresh. Invalid or outdated drafts are safely restarted.
 
 ## Build a research study
 
@@ -25,11 +25,13 @@ Connect the decks in six guided scenarios:
 
 The computing scenarios ask students to build a prototype and choose how to evaluate whether it solves the problem. An additional **Application evaluation** slot connects research choices to realistic tasks, accessibility goals, or agreed requirements. Complete a partly filled tree linking a paradigm to a methodology and methods for data collection and analysis. Drag a card into its slot, or select a card and then its slot; the card tray stays visible as you scroll.
 
-Feedback explains how each choice fits the specific brief. Some slots accept alternatives; the trees do not imply that methods belong exclusively to particular paradigms. Retry connections while keeping fitting choices and the first-attempt score. The activity is available in English and Estonian. Scenario progress lasts while the activity is open; changing scenarios starts a fresh tree.
+Feedback explains how each choice fits the specific brief. Some slots accept alternatives; the trees do not imply that methods belong exclusively to particular paradigms. Retry connections while keeping fitting choices and the first-attempt score. The activity is available in English and Estonian. Each scenario keeps its own draft and completion mark across navigation and refresh. Restart scenario clears that tree and its attempt score while retaining its completion mark.
 
 The relationship model is informed by [Open University research on paradigms and methods](https://oro.open.ac.uk/29480/) and its [research design teaching material](https://www.open.edu/openlearn/mod/oucontent/view.php?id=114270&section=4). Computing content also draws on [design science research education](https://aisel.aisnet.org/jise/vol34/iss3/2/), [NIST usability testing](https://www.nist.gov/programs-projects/usability-testing), and [W3C guidance on involving users in accessibility evaluation](https://www.w3.org/WAI/test-evaluate/involving-users/). Scenarios and feedback are introductory teaching examples.
 
 The definitions are introductory; terminology can vary across disciplines.
+
+New round and New placement round start fresh activities. Reset progress clears the selected deck’s progress and learning, matching, and placement drafts; it does not clear other decks or study scenarios. Clearing site data removes all saved work.
 
 ## References and content provenance
 

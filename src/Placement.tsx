@@ -1,4 +1,5 @@
-import { useRef, useState } from 'react';
+import { createSessionStore, validPlacement, type SessionStore } from './storage/sessions';
+import { useEffect, useRef, useState } from 'react';
 import type { Concept } from './content/foundations';
 import { translate, type Language } from './i18n';
 
@@ -11,25 +12,34 @@ function shuffle(ids: string[]) {
   return result;
 }
 
-export default function Placement({ concepts, language, deckTitle, onCheck }: {
+export default function Placement({ concepts, language, deckTitle, onCheck, sessions: suppliedSessions, sessionKey = 'placement', onStorageError }: {
+  sessions?: SessionStore;
+  sessionKey?: string;
+  onStorageError?: () => void;
   concepts: Concept[];
   deckTitle: string;
   language: Language;
   onCheck: (answers: { id: string; correct: boolean }[]) => void;
 }) {
+  const [sessions] = useState(() => suppliedSessions ?? createSessionStore());
+  const [draft] = useState(() => sessions.read(sessionKey, validPlacement(concepts.map(c => c.id))));
   const t = (text: string) => translate(language, text);
-  const [slots, setSlots] = useState(() => shuffle(concepts.map(c => c.id)));
-  const [cards, setCards] = useState(() => shuffle(concepts.map(c => c.id)));
-  const [placements, setPlacements] = useState<Record<string, string>>({});
+  const [slots, setSlots] = useState(() => draft?.slots ?? shuffle(concepts.map(c => c.id)));
+  const [cards, setCards] = useState(() => draft?.cards ?? shuffle(concepts.map(c => c.id)));
+  const [placements, setPlacements] = useState<Record<string, string>>(draft?.placements ?? {});
   const [selected, setSelected] = useState<string | null>(null);
-  const [checked, setChecked] = useState(false);
-  const [locked, setLocked] = useState<string[]>([]);
-  const [firstScore, setFirstScore] = useState<number | null>(null);
-  const checkLock = useRef(false);
+  const [checked, setChecked] = useState(draft?.checked ?? false);
+  const [locked, setLocked] = useState<string[]>(draft?.locked ?? []);
+  const [firstScore, setFirstScore] = useState<number | null>(draft?.firstScore ?? null);
+  const checkLock = useRef(draft?.checked ?? false);
   const heading = useRef<HTMLHeadingElement>(null);
   const concept = (id: string) => concepts.find(c => c.id === id)!;
   const correct = slots.filter(id => placements[id] === id);
   const complete = checked && correct.length === slots.length;
+
+  useEffect(() => {
+    if (!sessions.write(sessionKey, { slots, cards, placements, checked, locked, firstScore })) onStorageError?.();
+  }, [sessions, sessionKey, slots, cards, placements, checked, locked, firstScore, onStorageError]);
 
   function place(card: string, slot: string) {
     if (checked || locked.includes(slot) || locked.includes(card) || !cards.includes(card)) return;

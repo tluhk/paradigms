@@ -1,3 +1,4 @@
+import { createSessionStore, validNavigation, validDeck, type Screen } from './storage/sessions';
 import { paradigmCards } from './content/paradigms';
 import References, { ConceptReferences } from './References';
 import StudyBuilder from './StudyBuilder';
@@ -8,14 +9,16 @@ import { loadLanguage, saveLanguage, translate, type Language } from './i18n';
 import { createRound, missed, score, submit, type Round } from './game/round';
 import { emptyProgress, loadProgress, saveProgress, type Progress, STORAGE_KEY } from './storage/progress';
 
-type Screen = 'home' | 'learn' | 'practice' | 'summary' | 'placement' | 'study' | 'references';
 export default function App() {
+  const [sessions] = useState(createSessionStore);
+  const [navigation] = useState(() => sessions.read('navigation', validNavigation(decks.map(d => d.id))));
   const [language, setLanguage] = useState<Language>(loadLanguage);
   const t = (text: string) => translate(language, text);
-  const [deckIndex, setDeckIndex] = useState(0);
+  const [deckIndex, setDeckIndex] = useState(() => Math.max(0, decks.findIndex(d => d.id === navigation?.deckId)));
   const deck = decks[deckIndex];
   const concepts = deck.cards[language];
   const storageKey = deckIndex === 0 ? STORAGE_KEY : `${STORAGE_KEY}-${deck.id}`;
+  const [draft] = useState(() => sessions.read(`deck:${deck.id}`, validDeck(concepts.map(c => c.id))));
   const conceptById = (id: string) => concepts.find(c => c.id === id)!;
   useEffect(() => {
     document.documentElement.lang = language;
@@ -23,23 +26,37 @@ export default function App() {
     document.querySelector('meta[name="description"]')?.setAttribute('content', language === 'et' ? 'Õpi uurimistöö põhimõisteid, üks kaart korraga. Ontoloogia, epistemoloogia, metodoloogia ja teised mõisted.' : 'Learn the foundations of research, one card at a time. Explore ontology, epistemology, methodology and more.');
   }, [language]);
   function changeLanguage(value: Language) { setLanguage(value); saveLanguage(value); }
-  const [screen, setScreen] = useState<Screen>('home');
-  const [cardIndex, setCardIndex] = useState(0);
-  const [revealed, setRevealed] = useState(false);
-  const [round, setRound] = useState<Round>(() => createRound());
-  const [progress, setProgress] = useState(() => loadProgress());
+  function restoredScreen(saved: Screen): Screen {
+    if ((saved === 'practice' || saved === 'summary') && !draft) return 'home';
+    if (saved === 'summary' && draft?.round.questions.some(q => q.answer === undefined)) return 'practice';
+    return saved;
+  }
+  const [screen, setScreen] = useState<Screen>(() => restoredScreen(navigation?.screen ?? 'home'));
+  const [returnScreen, setReturnScreen] = useState<Screen>(() => restoredScreen(navigation?.returnScreen ?? 'home'));
+  const [practiceStarted, setPracticeStarted] = useState(draft?.practiceStarted ?? false);
+  const [cardIndex, setCardIndex] = useState(draft?.cardIndex ?? 0);
+  const [revealed, setRevealed] = useState(draft?.revealed ?? false);
+  const [round, setRound] = useState<Round>(() => draft?.round ?? createRound(concepts.map(c => c.id), null, concepts));
+  const [progress, setProgress] = useState(() => loadProgress(concepts, storageKey));
   const [storageWorks, setStorageWorks] = useState(true);
   const [resetting, setResetting] = useState(false);
   const heading = useRef<HTMLHeadingElement>(null);
   const answerLock = useRef(false);
   useEffect(() => { heading.current?.focus(); }, [screen, cardIndex, round.index, revealed]);
+  useEffect(() => {
+    const ok = sessions.write(`deck:${deck.id}`, { ids: concepts.map(c => c.id), cardIndex, revealed, round, practiceStarted });
+    const navOk = sessions.write('navigation', { deckId: deck.id, screen, returnScreen });
+    if (!ok || !navOk) setStorageWorks(false);
+  }, [sessions, deck.id, concepts, cardIndex, revealed, round, practiceStarted, screen, returnScreen]);
   function persist(next: Progress) { setProgress(next); setStorageWorks(saveProgress(next, storageKey)); }
-  function learn(index = 0) { setCardIndex(index); setRevealed(false); setScreen('learn'); }
-  function start(ids?: string[], initialScore: number | null = null) { answerLock.current = false; setRound(createRound(ids ?? concepts.map(c => c.id), initialScore, concepts)); setScreen('practice'); }
+  function learn(index?: number) { if (index !== undefined) { setCardIndex(index); setRevealed(false); } setScreen('learn'); }
+  function start(ids?: string[], initialScore: number | null = null) { setPracticeStarted(true); answerLock.current = false; setRound(createRound(ids ?? concepts.map(c => c.id), initialScore, concepts)); setScreen('practice'); }
   function chooseDeck(index: number) {
     const next = decks[index];
-    setDeckIndex(index); setCardIndex(0); setRevealed(false);
-    setRound(createRound(next.cards.en.map(c => c.id), null, next.cards.en));
+    const saved = sessions.read(`deck:${next.id}`, validDeck(next.cards.en.map(c => c.id)));
+    setDeckIndex(index); setCardIndex(saved?.cardIndex ?? 0); setRevealed(saved?.revealed ?? false);
+    setPracticeStarted(saved?.practiceStarted ?? false); answerLock.current = false;
+    setRound(saved?.round ?? createRound(next.cards.en.map(c => c.id), null, next.cards.en));
     setProgress(loadProgress(next.cards.en, index === 0 ? STORAGE_KEY : `${STORAGE_KEY}-${next.id}`));
     setResetting(false); setStorageWorks(true);
   }
@@ -71,15 +88,15 @@ export default function App() {
         </nav>
         <section className="deck-layout" aria-label={deck[language]}>
           <div className="deck-art" aria-hidden="true"><span className="art-note">{t("THE BUILDING BLOCKS OF RESEARCH")}</span><div className="paper paper-back"></div><div className="paper paper-middle"></div><div className="paper paper-front"><span className="paper-number">01 / {String(concepts.length).padStart(2, '0')} <span>✳</span></span><div className="orbit"><span></span></div><div><span className="eyebrow">{concepts[0].cue}</span><h2>{concepts[0].term}</h2><p>{concepts[0].question}</p></div><span className="paper-footer">{deck[language]} <span>↗</span></span></div><span className="art-bottom">{t("A small deck. A clearer perspective.")}</span></div>
-          <div className="deck-details"><div className="deck-label"><span className="pill">{String(deckIndex + 1).padStart(2, '0')}</span><span>{concepts.length} {language === 'et' ? 'mõistet · Omas tempos' : 'concepts · At your own pace'}</span></div><h2>{deck[language]}</h2><p>{language === 'et' ? deck.descriptionEt : deck.description}</p><div className="concept-tags">{concepts.map(c => <span key={c.id}>{c.term}</span>)}</div><div className="actions"><button className="primary" onClick={() => learn()}>{t("Explore the cards")} <span>↗</span></button><button className="secondary" onClick={() => start()}>{t("Practise matching")} <span>→</span></button></div><button className="secondary placement-entry" onClick={() => setScreen('placement')}>{t("Place the cards")} <span>↗</span></button><p className="small-note">{t("Start with learning, or jump straight into practice.")}</p></div>
+          <div className="deck-details"><div className="deck-label"><span className="pill">{String(deckIndex + 1).padStart(2, '0')}</span><span>{concepts.length} {language === 'et' ? 'mõistet · Omas tempos' : 'concepts · At your own pace'}</span></div><h2>{deck[language]}</h2><p>{language === 'et' ? deck.descriptionEt : deck.description}</p><div className="concept-tags">{concepts.map(c => <span key={c.id}>{c.term}</span>)}</div><div className="actions"><button className="primary" onClick={() => learn()}>{t("Explore the cards")} <span>↗</span></button><button className="secondary" onClick={() => { if (practiceStarted) { answerLock.current = false; setScreen(round.questions.every(q => q.answer !== undefined) ? 'summary' : 'practice'); } else start(); }}>{t("Practise matching")} <span>→</span></button></div><button className="secondary placement-entry" onClick={() => setScreen('placement')}>{t("Place the cards")} <span>↗</span></button><p className="small-note">{t("Start with learning, or jump straight into practice.")}</p></div>
         </section>
         <section className="study-entry"><div><span className="eyebrow">{language === 'et' ? 'SEO KAARDIPAKID' : 'CONNECT THE DECKS'}</span><h2>{language === 'et' ? 'Üks küsimus. Seostatud uuring.' : 'One question. A connected study.'}</h2><p>{language === 'et' ? 'Seo paradigmad, metodoloogia ja meetodid hariduse ja rakendusinformaatika uurimisolukordades.' : 'Connect paradigms, methodology, and methods in guided education and applied computing scenarios.'}</p></div><button className="primary" onClick={() => setScreen('study')}>{language === 'et' ? 'Koosta uuring' : 'Build a research study'} ↗</button></section>
         <section className="bottom-grid"><div className="how"><span className="eyebrow">{t("A SIMPLE WAY TO LEARN")}</span><div className="steps"><div><span>01</span><h3>{t("Explore")}</h3><p>{t("Reveal a definition and a real research example.")}</p></div><div><span>02</span><h3>{t("Connect")}</h3><p>{t("Match each concept to what it means.")}</p></div><div><span>03</span><h3>{t("Revisit")}</h3><p>{t("Give the tricky ones another go.")}</p></div></div></div><aside className="progress-box"><span className="eyebrow">{t("YOUR PROGRESS")}</span><strong>{viewed}<span>{` / ${concepts.length} ${language === 'et' ? 'kaardiga tutvutud' : 'cards explored'}`}</span></strong><progress value={viewed} max={concepts.length} aria-label={t("Cards explored")}/><p>{attempted}{language === 'et' ? ` mõistet ${concepts.length}-st harjutatud. Kiirustamata, ajapiiranguta.` : ` of ${concepts.length} concepts practised. No rush, no timer.`}</p></aside></section>
       </> : <section className={`play-area ${screen === 'placement' || screen === 'study' ? 'placement-area' : ''}`}>
-        <button className="back" onClick={() => setScreen('home')}>{t("← Back to deck")}</button>
+        <button className="back" onClick={() => setScreen(screen === 'references' ? returnScreen : 'home')}>{screen === 'references' && returnScreen !== 'home' ? (language === 'et' ? '← Tagasi tegevuse juurde' : '← Back to activity') : t("← Back to deck")}</button>
         {screen === 'references' && <References language={language} />}
-        {screen === 'study' && <StudyBuilder language={language} />}
-        {screen === 'placement' && <Placement deckTitle={deck[language]} concepts={concepts} language={language} onCheck={answers => {
+        {screen === 'study' && <StudyBuilder language={language} sessions={sessions} onStorageError={() => setStorageWorks(false)} />}
+        {screen === 'placement' && <Placement sessions={sessions} sessionKey={`placement:${deck.id}`} onStorageError={() => setStorageWorks(false)} deckTitle={deck[language]} concepts={concepts} language={language} onCheck={answers => {
           const cards = { ...progress.cards };
           for (const { id, correct } of answers) cards[id] = { ...cards[id], attempts: cards[id].attempts + 1, correct: cards[id].correct + Number(correct), latest: correct };
           persist({ ...progress, cards });
@@ -103,6 +120,6 @@ export default function App() {
         {screen === 'summary' && <div className="summary"><span className="eyebrow">{deck[language]} · {t('ROUND COMPLETE')}</span><h1 ref={heading} tabIndex={-1}>{missed(round).length ? t("Keep your curiosity.") : t("Connections made.")}</h1><div className="score">{initialScore}<span> / {round.initialTotal}</span></div><p>{t("Correct on your first attempt")}</p>{round.initialScore !== null && <p className="retry-note">{language === 'et' ? `Sellel kordamisel: ${score(round)} õiget vastust ${round.questions.length}-st.` : `This revisit: ${score(round)} of ${round.questions.length} correct.`}</p>}<div className="results">{round.questions.map(q => <div key={q.id}><span>{conceptById(q.id).term}</span><span>{q.answer === q.id ? t("✓ Correct") : t("↻ Revisit")}</span></div>)}</div><p>{missed(round).length ? t("Some ideas take another look. Revisit the cards you missed, whenever you’re ready.") : t("Try explaining these ideas in your own words, then return for another round.")}</p><div className="actions">{missed(round).length > 0 && <button className="primary" onClick={() => start(missed(round), initialScore)}>{t("Practise missed cards →")}</button>}<button className={missed(round).length ? 'secondary' : 'primary'} onClick={() => start()}>{t("New round ↗")}</button><button className="text-button" onClick={() => learn()}>{t("Back to learning")}</button></div></div>}
       </section>}
     </main>
-    <footer><div><strong>{t("Understanding starts with a question.")}</strong><p>{t("Introductory definitions; terminology can vary across disciplines.")}</p><p>{storageWorks ? t("Progress stays in this browser. Clearing browser data removes it.") : t("Browser storage is unavailable. Progress lasts for this session only.")}</p></div><div className="reset"><button className="text-button" onClick={() => setScreen('references')}>{language === 'et' ? 'Allikad' : 'References'}</button>{resetting ? <><span>{t("Delete your saved progress?")}</span><button className="text-button" onClick={() => { persist(emptyProgress(concepts)); setResetting(false); }}>{t("Yes, reset")}</button><button className="text-button" onClick={() => setResetting(false)}>{t("Cancel")}</button></> : <button className="text-button" onClick={() => setResetting(true)}>{t("Reset progress")}</button>}</div></footer>
+    <footer><div><strong>{t("Understanding starts with a question.")}</strong><p>{t("Introductory definitions; terminology can vary across disciplines.")}</p><p>{storageWorks ? t("Progress stays in this browser. Clearing browser data removes it.") : t("Browser storage is unavailable. Progress lasts for this session only.")}</p></div><div className="reset"><button className="text-button" onClick={() => { if (screen !== 'references') setReturnScreen(screen); setScreen('references'); }}>{language === 'et' ? 'Allikad' : 'References'}</button>{resetting ? <><span>{t("Delete your saved progress?")}</span><button className="text-button" onClick={() => { persist(emptyProgress(concepts)); sessions.remove(`placement:${deck.id}`); setCardIndex(0); setRevealed(false); setPracticeStarted(false); setRound(createRound(concepts.map(c => c.id), null, concepts)); answerLock.current = false; setScreen('home'); setReturnScreen('home'); setResetting(false); }}>{t("Yes, reset")}</button><button className="text-button" onClick={() => setResetting(false)}>{t("Cancel")}</button></> : <button className="text-button" onClick={() => setResetting(true)}>{t("Reset progress")}</button>}</div></footer>
   </>;
 }

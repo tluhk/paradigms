@@ -51,7 +51,6 @@ it('completes a round, retries a missed card without changing initial score, and
   expect(localStorage.getItem(STORAGE_KEY)).toContain('"attempts":2');
   await user.click(screen.getByRole('button', { name: 'Reset progress' }));
   await user.click(screen.getByRole('button', { name: 'Yes, reset' }));
-  await user.click(screen.getByRole('button', { name: /Back to deck/ }));
   expect(screen.getByText('0 of 6 concepts practised. No rush, no timer.')).toBeTruthy();
 });
 
@@ -86,6 +85,9 @@ it('translates learning content and preserves an answered question across langua
   view.unmount();
   render(<App />);
   expect((screen.getByRole('combobox', { name: 'Keel' }) as HTMLSelectElement).value).toBe('et');
+  expect(screen.getByText('Õige vastus!')).toBeTruthy();
+  expect(localStorage.getItem(STORAGE_KEY)).toBe(saved);
+  await user.click(screen.getByRole('button', { name: /Tagasi kaardipaki/ }));
   expect(screen.getByText('1 mõistet 6-st harjutatud. Kiirustamata, ajapiiranguta.')).toBeTruthy();
 });
 
