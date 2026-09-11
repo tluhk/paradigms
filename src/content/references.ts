@@ -13,6 +13,7 @@ const handbook = (title: string, path: string): Reference => ({
   url: `https://open.library.okstate.edu/gognresearchmethods/${path}/`, kind: 'handbook',
 });
 export const references = {
+  postpositivism: handbook('Positivism/Post Positivism', 'chapter/positivism-post-positivism'),
   ontology: handbook('Ontology', 'chapter/ontology'),
   epistemology: handbook('Epistemology', 'chapter/epistemology'),
   axiology: handbook('Axiology', 'chapter/axiology'),
@@ -44,6 +45,7 @@ export const references = {
 export type ReferenceId = keyof typeof references;
 // Shared concept IDs ensure English and Estonian explanations cite the same evidence.
 export const conceptReferences: Record<string, readonly ReferenceId[]> = {
+  postpositivism: ['postpositivism'],
   ontology: ['ontology'], epistemology: ['epistemology'], axiology: ['axiology'],
   paradigm: ['paradigms', 'pluralism'], methodology: ['methodology'], method: ['methods', 'pluralism'],
   interpretivism: ['interpretivism'], pragmatism: ['pragmatism', 'pluralism'], critical: ['critical'],

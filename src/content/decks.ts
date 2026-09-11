@@ -1,3 +1,4 @@
+import { paradigmCards } from './paradigms';
 import { concepts, type Concept } from './foundations';
 import { estonianConcepts } from './foundations.et';
 
@@ -30,4 +31,5 @@ export const decks = [
   { id: 'foundations', en: 'Foundations of research', et: 'Uurimistöö alused', description: 'Reality, knowledge, values, and the choices behind a study. Get to know the ideas that connect them.', descriptionEt: 'Tegelikkus, teadmised, väärtused ja uuringu aluseks olevad valikud. Tutvu neid ühendavate mõistetega.', cards: { en: concepts, et: estonianConcepts } },
   { id: 'methodologies', en: 'Methodology', et: 'Metodoloogia', description: 'Explore approaches to designing a study, from case studies to mixed methods research.', descriptionEt: 'Tutvu lähenemistega uuringu kavandamisele, juhtumiuuringust segameetoditega uuringuni.', cards: { en: methodologies.map(c => c.en), et: methodologies.map(c => c.et) } },
   { id: 'methods', en: 'Methods', et: 'Meetodid', description: 'Discover practical techniques for collecting and analysing research material.', descriptionEt: 'Avasta praktilisi võtteid uurimismaterjali kogumiseks ja analüüsimiseks.', cards: { en: methods.map(c => c.en), et: methods.map(c => c.et) } },
+  { id: 'paradigms', en: 'Paradigms', et: 'Paradigmad', description: 'Explore four research orientations and their assumptions about reality, knowledge, and values.', descriptionEt: 'Tutvu nelja uurimissuuna ning nende eeldustega tegelikkuse, teadmiste ja väärtuste kohta.', cards: paradigmCards },
 ];

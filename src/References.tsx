@@ -1,7 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { conceptReferences, references, type Reference, type ReferenceId } from './content/references';
 import { decks } from './content/decks';
-import { paradigms } from './content/studies';
 import { evaluationCards } from './content/computing-studies';
 import type { Language } from './i18n';
 
@@ -22,7 +21,6 @@ export default function References({ language }: { language: Language }) {
   const say = (en: string, et: string) => language === 'et' ? et : en;
   const groups = [
     ...decks.map(deck => ({ title: deck[language], cards: deck.cards[language] })),
-    { title: say('Paradigms', 'Paradigmad'), cards: paradigms.map(p => ({ id: p.id, term: p.term[language] })) },
     { title: say('Application evaluation', 'Rakenduse hindamine'), cards: evaluationCards.map(p => ({ id: p.id, term: p.term[language] })) },
   ];
   return <div className="references-page">

@@ -155,3 +155,29 @@ it('reaches the added learning cards and starts practice only after the last car
   }
   expect(screen.getByText('Question 1 of 8')).toBeTruthy();
 });
+
+it('teaches all four paradigms with bilingual assumptions and references', async () => {
+  const { paradigmCards } = await import('./content/paradigms');
+  const user = userEvent.setup();
+  render(<App />);
+  await user.click(screen.getByRole('button', { name: /Paradigms$/ }));
+  await user.click(screen.getByRole('button', { name: /Explore the cards/ }));
+  for (let i = 0; i < 4; i++) {
+    expect(screen.getByText(`Card ${i + 1} of 4`)).toBeTruthy();
+    await user.click(screen.getByRole('button', { name: /Show explanation/ }));
+    const active = document.querySelector('.learning-flip[aria-hidden="false"]')!;
+    expect(active.textContent).toContain(paradigmCards.en[i].assumptions.ontology);
+    expect(active.textContent).toContain(paradigmCards.en[i].assumptions.epistemology);
+    expect(active.textContent).toContain(paradigmCards.en[i].assumptions.axiology);
+    expect(screen.getAllByRole('link').some(link => link.getAttribute('target') === '_blank')).toBe(true);
+    await user.selectOptions(screen.getByRole('combobox', { name: 'Language' }), 'et');
+    expect(active.textContent).toContain(paradigmCards.et[i].assumptions.ontology);
+    expect(screen.getByRole('heading', { level: 1 }).textContent).toBe(paradigmCards.et[i].term);
+    await user.selectOptions(screen.getByRole('combobox', { name: 'Keel' }), 'en');
+    await user.click(screen.getByRole('button', { name: i < 3 ? /Next card/ : /Practise this deck/ }));
+  }
+  expect(screen.getByText('Question 1 of 4')).toBeTruthy();
+  const saved = JSON.parse(localStorage.getItem(`${STORAGE_KEY}-paradigms`)!);
+  expect(Object.values(saved.cards).every((entry: any) => entry.viewed)).toBe(true);
+  expect(localStorage.getItem(STORAGE_KEY)).toBeNull();
+});

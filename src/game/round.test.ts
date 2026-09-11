@@ -52,7 +52,7 @@ describe('progress storage', () => {
 
 it('extends saved decks without losing existing progress and keeps full retry totals', async () => {
   const { decks } = await import('../content/decks');
-  for (const deck of decks.slice(1)) {
+  for (const deck of decks.filter(d => d.id === 'methodologies' || d.id === 'methods')) {
     const previous = emptyProgress(deck.cards.en.slice(0, 6));
     const id = deck.cards.en[0].id;
     previous.cards[id] = { viewed: true, attempts: 3, correct: 2, latest: true };

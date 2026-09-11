@@ -2,7 +2,7 @@ import { ConceptReferences } from './References';
 import { useEffect, useRef, useState } from 'react';
 import { evaluationCards } from './content/computing-studies';
 import { decks } from './content/decks';
-import { evaluateStudy, paradigms, slotLabels, studies, type StudySlot } from './content/studies';
+import { evaluateStudy, slotLabels, studies, type StudySlot } from './content/studies';
 import type { Language } from './i18n';
 
 export default function StudyBuilder({ language }: { language: Language }) {
@@ -24,7 +24,7 @@ export default function StudyBuilder({ language }: { language: Language }) {
   const editable = slots.filter(slot => !study.fixed[slot]);
   const score = results.filter(r => !study.fixed[r.slot] && r.choice?.fits).length;
   const complete = checked && results.every(r => r.choice?.fits);
-  const allCards = [...decks.slice(1).flatMap(deck => deck.cards[language]), ...[...paradigms, ...evaluationCards].map(p => ({ id: p.id, term: p.term[language], definition: p.definition[language] }))];
+  const allCards = [...decks.slice(1).flatMap(deck => deck.cards[language]), ...evaluationCards.map(p => ({ id: p.id, term: p.term[language], definition: p.definition[language] }))];
   const card = (id: string) => allCards.find(c => c.id === id)!;
   const available = [...new Set(editable.flatMap(slot => study.slots[slot]!.map(c => c.id)))].filter(id => !Object.values(answers).includes(id));
   function reset(next = index) {

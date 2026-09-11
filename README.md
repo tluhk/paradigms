@@ -1,10 +1,12 @@
 # Research Cards
 
-Research Cards is an interactive learning app for beginners exploring the foundations of research. It includes three decks: six Foundations cards, eight Methodology cards, and eight Methods cards:
+Research Cards is an interactive learning app for beginners exploring the foundations of research. It includes four decks: six Foundations cards, eight Methodology cards, eight Methods cards, and four Paradigms cards:
 
 - **Foundations:** ontology, epistemology, axiology, research paradigm, methodology, and method.
 - **Methodology:** case study, ethnography, phenomenology, grounded theory, action research, mixed methods research, design science research, and experimental design.
 - **Methods:** interview, questionnaire, observation, focus group, thematic analysis, descriptive statistics, usability testing, and requirements interviews.
+
+- **Paradigms:** interpretivism, pragmatism, critical/transformative approaches, and postpositivism, with links to ontology, epistemology, and axiology.
 
 The app is available in **English and Estonian (Eesti)** and offers three ways to learn:
 
@@ -33,7 +35,7 @@ The definitions are introductory; terminology can vary across disciplines.
 
 Each learning card links to references for its concept. The study builder shows references for selected and placed cards, including paradigms and application evaluation choices. Open **References** in the footer for the complete bibliography organised by concept. Links open in a new tab so the activity stays in place.
 
-The bibliography covers all 22 learning concepts, three named paradigms, and four evaluation choices. It includes author names, publication dates where specified, titles, publication details, and DOI identifiers where available. English and Estonian share the same source mappings; original source titles are retained. Thematic analysis includes both the 2006 article and the authors’ subsequent teaching resources. Some publisher links may restrict full-text access.
+The bibliography covers all 26 learning concepts (including four named paradigms) and four evaluation choices. It includes author names, publication dates where specified, titles, publication details, and DOI identifiers where available. English and Estonian share the same source mappings; original source titles are retained. Thematic analysis includes both the 2006 article and the authors’ subsequent teaching resources. Some publisher links may restrict full-text access.
 
 Definitions are introductory paraphrases. Examples, scenarios, and scoring rules are written for this game, not taken from empirical studies or endorsed by the cited authors. References support the underlying concepts; they do not establish exclusive paradigm–method pairings or validate the game as a teaching instrument. The Open University handbook is CC BY 4.0 and is attributed at chapter level.
 
@@ -65,7 +67,12 @@ The workflow tests, builds, and deploys the app. Open the site URL shown by the 
 - `src/content/decks.ts`: deck metadata and bilingual Methodology and Methods content.
 - `src/content/studies.ts`: bilingual scenarios, accepted connections, and explanatory feedback.
 - `src/content/computing-studies.ts`: computing scenarios and application evaluation cards.
+- `src/content/paradigms.ts`: bilingual paradigm cards and their philosophical assumptions, shared with scenarios.
 - `src/content/references.ts`: bibliography and concept-to-source mappings.
 - `src/i18n.ts`: interface translations.
 
 Keep concept IDs and ordering aligned across languages so questions and progress remain consistent.
+
+## Improvement roadmap
+
+See [IMPROVEMENT_PLAN.md](IMPROVEMENT_PLAN.md) for the prioritised roadmap and implementation log. [PLAN.md](PLAN.md) records the original first-release scope.

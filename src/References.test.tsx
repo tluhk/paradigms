@@ -13,7 +13,7 @@ afterEach(() => { cleanup(); localStorage.clear(); });
 it('covers every bilingual concept and scenario choice with an identifiable reference', () => {
   for (const language of ['en', 'et'] as const) {
     const ids = [...decks.flatMap(deck => deck.cards[language].map(c => c.id)), ...paradigms.map(p => p.id), ...evaluationCards.map(p => p.id)];
-    expect(new Set(ids).size).toBe(29);
+    expect(new Set(ids).size).toBe(30);
     for (const id of ids) {
       expect(conceptReferences[id]?.length, id).toBeGreaterThan(0);
       for (const referenceId of conceptReferences[id]) {

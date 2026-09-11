@@ -8,11 +8,7 @@ export const slotLabels: Record<StudySlot, Bilingual> = {
   analysis: text('Data analysis', 'Andmeanalüüs'),
   evaluation: text('Application evaluation', 'Rakenduse hindamine'),
 };
-export const paradigms = [
-  { id: 'interpretivism', term: text('Interpretivism', 'Interpretivism'), definition: text('Understand how people interpret their experiences in context.', 'Mõista, kuidas inimesed oma kogemusi kontekstis tõlgendavad.') },
-  { id: 'pragmatism', term: text('Pragmatism', 'Pragmatism'), definition: text('Choose and connect approaches around the research problem and practical consequences.', 'Valida ja ühendada lähenemisi uurimisprobleemi ning praktiliste tagajärgede põhjal.') },
-  { id: 'critical', term: text('Critical / transformative', 'Kriitiline / transformatiivne'), definition: text('Examine power and inequality and work towards change with participants.', 'Uurida võimu ja ebavõrdsust ning töötada koos osalejatega muutuse nimel.') },
-];
+export { paradigms } from './paradigms';
 interface Choice { id: string; fits: boolean; reason: Bilingual }
 const choice = (id: string, fits: boolean, en: string, et: string): Choice => ({ id, fits, reason: text(en, et) });
 export interface Study {

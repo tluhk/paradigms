@@ -1,3 +1,4 @@
+import { paradigmCards } from './content/paradigms';
 import References, { ConceptReferences } from './References';
 import StudyBuilder from './StudyBuilder';
 import Placement from './Placement';
@@ -65,7 +66,7 @@ export default function App() {
     <main id="main">
       {screen === 'home' ? <>
         <section className="intro"><span className="eyebrow">{t("YOUR RESEARCH JOURNEY STARTS HERE")}</span><h1 ref={heading} tabIndex={-1}>{t("Big ideas.")}<br/><em>{t("One card at a time.")}</em></h1><p>{t("Make sense of the language of research.")}<br/>{language === 'et' ? 'Tutvu uurimistöö mõistetega ja pane oma teadmised proovile.' : 'Explore research concepts, then put your understanding into practice.'}</p></section>
-        <nav className="deck-picker" aria-label={t('Choose a deck')}>
+        <nav className="deck-picker learning-deck-picker" aria-label={t('Choose a deck')}>
           {decks.map((item, index) => <button key={item.id} aria-pressed={index === deckIndex} onClick={() => chooseDeck(index)}><span>0{index + 1}</span>{item[language]}</button>)}
         </nav>
         <section className="deck-layout" aria-label={deck[language]}>
@@ -92,6 +93,7 @@ export default function App() {
             <div className="learning-card learning-face learning-back" aria-hidden={!revealed} inert={!revealed}>
               <span className="pill">{card.cue}</span><h1 ref={index === cardIndex && revealed ? heading : undefined} tabIndex={-1}>{card.term}</h1>
               <div className="explanation"><p className="definition">{card.definition}</p><div className="example"><span className="eyebrow">{t("IN A STUDY")}</span><p>{card.example}</p></div><div className="distinction"><span className="eyebrow">{t("MAKE THE DISTINCTION")}</span><p>{card.distinction}</p></div></div>
+              {deck.id === 'paradigms' && <section className="paradigm-assumptions"><h2>{language === 'et' ? 'Seosed uurimistöö alustega' : 'Connections to the foundations'}</h2><p>{language === 'et' ? 'Sissejuhatav ülevaade; traditsioonide sees on erinevusi.' : 'An introductory overview; positions vary within these traditions.'}</p><dl>{Object.entries(paradigmCards[language].find(p => p.id === card.id)!.assumptions).map(([key, value]) => <div key={key}><dt>{key === 'ontology' ? (language === 'et' ? 'Ontoloogia' : 'Ontology') : key === 'epistemology' ? (language === 'et' ? 'Epistemoloogia' : 'Epistemology') : (language === 'et' ? 'Aksioloogia' : 'Axiology')}</dt><dd>{value}</dd></div>)}</dl></section>}
               <ConceptReferences conceptId={card.id} language={language} />
               <button className="secondary flip-back" onClick={() => setRevealed(false)}>{t("↶ Back to the term")}</button>
             </div>
