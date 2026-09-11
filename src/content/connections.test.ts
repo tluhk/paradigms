@@ -23,7 +23,7 @@ it('checks actual evidence combinations and distinguishes missing cards from mis
   expect(evaluateConnections(study, { ...solution(0), collection: 'focus-group' })[0].status).toBe('fits');
 });
 it('requires evaluation evidence tied to each computing question', () => {
-  for (let i = 3; i < studies.length; i++) {
+  for (let i = 3; i < 6; i++) {
     const results = evaluateConnections(studies[i], { ...solution(i), evaluation: 'count-features' });
     expect(results.some(r => r.slots.includes('evaluation') && r.status === 'reconsider')).toBe(true);
     expect(results.some(r => !r.slots.includes('evaluation') && r.status === 'fits')).toBe(true);

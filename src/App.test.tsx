@@ -158,14 +158,14 @@ it('reaches the added learning cards and starts practice only after the last car
   expect(screen.getByText('Question 1 of 8')).toBeTruthy();
 });
 
-it('teaches all four paradigms with bilingual assumptions and references', async () => {
+it('teaches all seven paradigms with bilingual assumptions and references', async () => {
   const { paradigmCards } = await import('./content/paradigms');
   const user = userEvent.setup();
   render(<App />);
   await user.click(screen.getByRole('button', { name: /Paradigms$/ }));
   await user.click(screen.getByRole('button', { name: /Explore the cards/ }));
-  for (let i = 0; i < 4; i++) {
-    expect(screen.getByText(`Card ${i + 1} of 4`)).toBeTruthy();
+  for (let i = 0; i < paradigmCards.en.length; i++) {
+    expect(screen.getByText(`Card ${i + 1} of ${paradigmCards.en.length}`)).toBeTruthy();
     await user.click(screen.getByRole('button', { name: /Show explanation/ }));
     const active = document.querySelector('.learning-flip[aria-hidden="false"]')!;
     expect(active.textContent).toContain(paradigmCards.en[i].assumptions.ontology);
@@ -176,9 +176,9 @@ it('teaches all four paradigms with bilingual assumptions and references', async
     expect(active.textContent).toContain(paradigmCards.et[i].assumptions.ontology);
     expect(screen.getByRole('heading', { level: 1 }).textContent).toBe(paradigmCards.et[i].term);
     await user.selectOptions(screen.getByRole('combobox', { name: 'Keel' }), 'en');
-    await user.click(screen.getByRole('button', { name: i < 3 ? /Next card/ : /Practise this deck/ }));
+    await user.click(screen.getByRole('button', { name: i < paradigmCards.en.length - 1 ? /Next card/ : /Practise this deck/ }));
   }
-  expect(screen.getByText('Question 1 of 4')).toBeTruthy();
+  expect(screen.getByText('Question 1 of 7')).toBeTruthy();
   const saved = JSON.parse(localStorage.getItem(`${STORAGE_KEY}-paradigms`)!);
   expect(Object.values(saved.cards).every((entry: any) => entry.viewed)).toBe(true);
   expect(localStorage.getItem(STORAGE_KEY)).toBeNull();

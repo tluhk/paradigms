@@ -75,7 +75,7 @@ export default function StudyBuilder({ language, sessions: suppliedSessions, onS
     <h1 ref={heading} tabIndex={-1}>{say('Build a research study', 'Koosta uuring')}</h1>
     <p>{say('Complete a guided tree. These are plausible designs for specific briefs, not universal rules about which methods belong to a paradigm.', 'Täienda juhendatud puud. Need on konkreetsete ülesannete jaoks sobivad uuringud, mitte üldreeglid selle kohta, millised meetodid kuuluvad paradigma juurde.')}</p>
     <nav className="deck-picker" aria-label={say('Research scenarios', 'Uurimisolukorrad')}>
-      {studies.map((item, i) => <button key={item.id} aria-pressed={index === i} onClick={() => reset(i, false)}><span>0{i + 1}{completed.includes(item.id) && <span aria-label={say('Completed', 'Lõpetatud')}> ✓</span>}</span>{item.title[language]}</button>)}
+      {studies.map((item, i) => <button key={item.id} aria-pressed={index === i} onClick={() => reset(i, false)}><span>{String(i + 1).padStart(2, '0')}{completed.includes(item.id) && <span aria-label={say('Completed', 'Lõpetatud')}> ✓</span>}</span>{item.title[language]}</button>)}
     </nav>
     <section className="study-brief"><span className="eyebrow">{say('RESEARCH QUESTION', 'UURIMISKÜSIMUS')}</span><h2>{study.question[language]}</h2><p>{study.brief[language]}</p></section>
     <p>{say('Drag a card to a slot, or click a card, scroll normally, then click a slot. Click a filled slot to return its card. Given cards stay in place.', 'Lohista kaart kohale või klõpsa kaardil, keri tavaliselt ja klõpsa kohal. Kaardi tagastamiseks klõpsa täidetud kohal. Etteantud kaardid jäävad paika.')}</p>

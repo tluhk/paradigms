@@ -63,3 +63,15 @@ Delivered: explicit combination rules for all six scenarios, covering collection
 Validation: all 39 tests pass; production build and whitespace checks pass. Tests enumerate every supported combination, check mismatches and incomplete chains, cover evaluation goals and conflict retries, and verify bilingual review feedback in computing scenarios. No real-browser visual check or external teaching review was performed. Feedback elaborates the existing teaching briefs and their evidence requirements; rules do not claim universal compatibility or validated assessment.
 
 Next: Step 5, research quality decisions.
+
+### Coverage update — Additional paradigms
+
+Status: Implemented before Step 5, following the requested coverage review.
+
+Delivered: positivism, constructivism (with a social constructivist emphasis), and critical realism bring the paradigm deck to seven cards. All include English/Estonian definitions, philosophical assumptions, comparisons, application examples, and references. Three new computing scenarios apply positivism/postpositivism, constructivism/interpretivism, and critical realism, bringing the total to nine. Explicit combination rules, reflection prompts, saved drafts, and supported alternatives work with the new scenarios. The experiment and mechanism-focused scenarios state where the introductory analysis cards need further analytical work.
+
+Sources checked: the Open University handbook’s Positivism/Post Positivism chapter; Nyein et al. (2020), Beyond positivism, including its comparison and discussion of social constructivism/interpretivism; Bygstad et al. (2016), Identifying Generative Mechanisms through Affordances, publisher metadata and abstract. Scenarios are original teaching examples; sources do not validate their scoring. Critical realism classifications vary across authors, and the deck does not present a universally exhaustive taxonomy.
+
+Validation: all 41 tests pass; production build and whitespace checks pass. Seven-card bilingual learning, reference coverage, new scenario play-throughs in both languages (including alternative paradigms), all accepted combinations, and preservation of original card progress are covered. Obsolete four-card paradigm drafts restart safely. No real-browser visual check or external teaching review was performed.
+
+Next remains Step 5, research quality decisions.

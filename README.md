@@ -1,12 +1,12 @@
 # Research Cards
 
-Research Cards is an interactive learning app for beginners exploring the foundations of research. It includes four decks: six Foundations cards, eight Methodology cards, eight Methods cards, and four Paradigms cards:
+Research Cards is an interactive learning app for beginners exploring the foundations of research. It includes four decks: six Foundations cards, eight Methodology cards, eight Methods cards, and seven Paradigms cards:
 
 - **Foundations:** ontology, epistemology, axiology, research paradigm, methodology, and method.
 - **Methodology:** case study, ethnography, phenomenology, grounded theory, action research, mixed methods research, design science research, and experimental design.
 - **Methods:** interview, questionnaire, observation, focus group, thematic analysis, descriptive statistics, usability testing, and requirements interviews.
 
-- **Paradigms:** interpretivism, pragmatism, critical/transformative approaches, and postpositivism, with links to ontology, epistemology, and axiology.
+- **Paradigms:** interpretivism, pragmatism, critical/transformative approaches, postpositivism, positivism, constructivism, and critical realism, with links to ontology, epistemology, and axiology.
 
 The app is available in **English and Estonian (Eesti)** and offers three ways to learn:
 
@@ -18,12 +18,12 @@ Learners can switch languages at any time without losing their active round. Pro
 
 ## Build a research study
 
-Connect the decks in six guided scenarios:
+Connect the decks in nine guided scenarios:
 
 - **Education:** belonging at school, understanding feedback, and equitable classroom participation.
-- **Applied computing:** a campus room finder, an accessible course planner, and a lab equipment lending system.
+- **Applied computing:** a campus room finder, an accessible course planner, a lab equipment lending system, a controlled search-interface comparison, meanings of fair contribution in a team dashboard, and a comparison of booking-app outcomes across departments.
 
-The computing scenarios ask students to build a prototype and choose how to evaluate whether it solves the problem. An additional **Application evaluation** slot connects research choices to realistic tasks, accessibility goals, or agreed requirements. Complete a partly filled tree linking a paradigm to a methodology and methods for data collection and analysis. Drag a card into its slot, or select a card and then its slot; the card tray stays visible as you scroll.
+The first three computing scenarios ask students to build a prototype and choose how to evaluate whether it solves the problem. An additional **Application evaluation** slot connects research choices to realistic tasks, accessibility goals, or agreed requirements. Complete a partly filled tree linking a paradigm to a methodology and methods for data collection and analysis. Drag a card into its slot, or select a card and then its slot; the card tray stays visible as you scroll.
 
 Feedback explains how each choice fits the specific brief. Some slots accept alternatives; the trees do not imply that methods belong exclusively to particular paradigms. Retry connections while keeping fitting choices and the first-attempt score. The activity is available in English and Estonian. Each scenario keeps its own draft and completion mark across navigation and refresh. Restart scenario clears that tree and its attempt score while retaining its completion mark.
 
@@ -33,7 +33,9 @@ After checking a tree, **Explain your choices** offers a prompt for each chosen 
 
 The relationship model is informed by [Open University research on paradigms and methods](https://oro.open.ac.uk/29480/) and its [research design teaching material](https://www.open.edu/openlearn/mod/oucontent/view.php?id=114270&section=4). Computing content also draws on [design science research education](https://aisel.aisnet.org/jise/vol34/iss3/2/), [NIST usability testing](https://www.nist.gov/programs-projects/usability-testing), and [W3C guidance on involving users in accessibility evaluation](https://www.w3.org/WAI/test-evaluate/involving-users/). Scenarios and feedback are introductory teaching examples.
 
-The definitions are introductory; terminology can vary across disciplines.
+The definitions are introductory; terminology can vary across disciplines. The paradigm deck is a selection, not an exhaustive classification. It compares positivism with postpositivism, explains constructivism’s overlap with interpretivism, and distinguishes critical realism from critical/transformative research. The new scenarios accept both positivist and postpositivist justifications for the controlled experiment and both constructivist and interpretivist justifications for the meaning-focused case. They explain the further analysis needed beyond descriptive statistics or thematic organisation.
+
+Existing progress on the original paradigm cards is retained. Saved four-card paradigm rounds restart because the deck now has seven cards; other decks and scenario drafts are unaffected.
 
 New round and New placement round start fresh activities. Reset progress clears the selected deck’s progress and learning, matching, and placement drafts; it does not clear other decks or study scenarios. Clearing site data removes all saved work.
 
@@ -41,7 +43,7 @@ New round and New placement round start fresh activities. Reset progress clears 
 
 Each learning card links to references for its concept. The study builder shows references for selected and placed cards, including paradigms and application evaluation choices. Open **References** in the footer for the complete bibliography organised by concept. Links open in a new tab so the activity stays in place.
 
-The bibliography covers all 26 learning concepts (including four named paradigms) and four evaluation choices. It includes author names, publication dates where specified, titles, publication details, and DOI identifiers where available. English and Estonian share the same source mappings; original source titles are retained. Thematic analysis includes both the 2006 article and the authors’ subsequent teaching resources. Some publisher links may restrict full-text access.
+The bibliography covers all 29 learning concepts (including seven named paradigms) and four evaluation choices. It includes author names, publication dates where specified, titles, publication details, and DOI identifiers where available. English and Estonian share the same source mappings; original source titles are retained. Thematic analysis includes both the 2006 article and the authors’ subsequent teaching resources. Some publisher links may restrict full-text access.
 
 Definitions are introductory paraphrases. Examples, scenarios, and scoring rules are written for this game, not taken from empirical studies or endorsed by the cited authors. References support the underlying concepts; they do not establish exclusive paradigm–method pairings or validate the game as a teaching instrument. The Open University handbook is CC BY 4.0 and is attributed at chapter level.
 
@@ -74,6 +76,7 @@ The workflow tests, builds, and deploys the app. Open the site URL shown by the 
 - `src/content/studies.ts`: bilingual scenarios, accepted connections, and explanatory feedback.
 - `src/content/connections.ts`: explicit scenario combination rules and bilingual feedback. Keep these aligned with changes to scenario briefs and choices.
 - `src/content/computing-studies.ts`: computing scenarios and application evaluation cards.
+- `src/content/paradigm-studies.ts`: computing scenarios applying positivism/postpositivism, constructivism/interpretivism, and critical realism.
 - `src/content/paradigms.ts`: bilingual paradigm cards and their philosophical assumptions, shared with scenarios.
 - `src/content/references.ts`: bibliography and concept-to-source mappings.
 - `src/i18n.ts`: interface translations.

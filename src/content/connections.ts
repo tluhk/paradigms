@@ -15,6 +15,24 @@ const evaluationTitle = text('Research question → evaluation', 'Uurimisküsimu
 // These are checks against each teaching brief, not universal method pairings.
 // Keep the accepted combinations explicit rather than deriving them from card scores.
 export const connectionRules: Record<string, ConnectionRule[]> = {
+  'search-experiment': [{
+    id: 'controlled-errors', slots: ['paradigm', 'methodology', 'collection', 'analysis'],
+    accepts: { paradigm: ['positivism', 'postpositivism'], methodology: ['experimental-design'], collection: ['usability-testing'], analysis: ['descriptive-statistics'] }, title: evidenceTitle,
+    fits: text('The controlled design connects observed task errors to group summaries. Positivism and postpositivism can both support this method chain with different accounts of knowledge. To evaluate the hypothesis, further analysis must address effect size and uncertainty; these descriptive cards are only the starting point.', 'Kontrollitud disain seob vaadeldud ülesandevead rühmade kokkuvõtetega. Positivism ja postpositivism võivad mõlemad toetada seda meetodite ahelat erinevate teadmiskäsitlustega. Hüpoteesi hindamiseks peab lisaanalüüs käsitlema mõju suurust ja ebakindlust; need kirjeldavad kaardid on vaid lähtekoht.'),
+    reconsider: text('This question needs a controlled comparison and observed errors. A conversation about meanings could answer a different question, but cannot replace this measurement chain. Do not infer the paradigm from the experiment alone.', 'See küsimus vajab kontrollitud võrdlust ja vaadeldud vigu. Vestlus tähendustest võiks vastata teisele küsimusele, kuid ei asenda seda mõõtmisahelat. Ära järelda paradigmat ainult eksperimendi põhjal.'),
+  }],
+  'team-dashboard': [{
+    id: 'negotiated-meaning', slots: ['paradigm', 'collection', 'analysis'],
+    accepts: { paradigm: ['constructivism', 'interpretivism'], collection: ['focus-group'], analysis: ['thematic-analysis'] }, title: evidenceTitle,
+    fits: text('The discussion provides evidence of how fairness is negotiated; thematic analysis explores meanings and disagreements. A constructivist or interpretivist justification can fit. Explain the researcher’s role instead of treating a commit count as an objective definition of fairness.', 'Arutelu annab tõendeid õigluse tähenduse läbirääkimisest; temaatiline analüüs uurib tähendusi ja erimeelsusi. Sobida võib konstruktivistlik või interpretivistlik põhjendus. Selgita uurija rolli, käsitlemata koodimuudatuste arvu õigluse objektiivse määratlusena.'),
+    reconsider: text('Connect the question about negotiated meaning to group interaction and interpretation of the discussion. Ratings or counts alone would miss how these meanings are constructed.', 'Seo läbi räägitud tähenduse küsimus rühmasuhtluse ja arutelu tõlgendamisega. Ainult hinnangud või arvud ei näitaks nende tähenduste kujunemist.'),
+  }],
+  'booking-context': [{
+    id: 'mechanisms', slots: ['paradigm', 'methodology', 'collection', 'collection2', 'analysis'],
+    accepts: { paradigm: ['critical-realism'], methodology: ['case-study'], collection: ['interview'], collection2: ['observation'], analysis: ['thematic-analysis'] }, title: text('Accounts and workflows → possible mechanisms', 'Kirjeldused ja töövood → võimalikud mehhanismid'),
+    fits: text('Compare interview themes with observed workflows within and across departments. Ask what could explain the outcome difference, and what evidence would challenge each proposed mechanism. Thematic organisation supports this inquiry but does not complete the causal explanation.', 'Võrdle intervjuude teemasid vaadeldud töövoogudega osakondade sees ja vahel. Küsi, mis võiks tulemuste erinevust selgitada ja millised tõendid seaksid iga pakutud mehhanismi kahtluse alla. Teemadeks korrastamine toetab uurimist, kuid ei lõpeta põhjuslikku selgitust.'),
+    reconsider: text('The brief requires contextual evidence from accounts and observation, organised for comparison across cases and followed by examination of possible mechanisms. A numerical difference or a shared theme alone does not explain why the app works differently.', 'Ülesanne vajab kirjelduste ja vaatluse kontekstuaalseid tõendeid, mis on korrastatud juhtumite võrdlemiseks ning millele järgneb võimalike mehhanismide uurimine. Arvuline erinevus või ühine teema üksi ei selgita, miks rakendus toimib erinevalt.'),
+  }],
   belonging: [{
     id: 'accounts', slots: ['collection', 'analysis'],
     accepts: { collection: ['interview', 'focus-group'], analysis: ['thematic-analysis'] }, title: evidenceTitle,

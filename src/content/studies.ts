@@ -1,3 +1,4 @@
+import { paradigmStudies } from './paradigm-studies';
 import { computingStudies } from './computing-studies';
 export type Bilingual = { en: string; et: string };
 const text = (en: string, et: string): Bilingual => ({ en, et });
@@ -55,6 +56,7 @@ export const studies: Study[] = [
     },
   },
   ...computingStudies,
+  ...paradigmStudies,
 ];
 export function evaluateStudy(study: Study, answers: Partial<Record<StudySlot, string>>) {
   return (Object.keys(study.slots) as StudySlot[]).map(slot => ({ slot, choice: study.slots[slot]!.find(c => c.id === answers[slot]) }));
