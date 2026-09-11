@@ -151,3 +151,22 @@ it('drags cards into slots, replaces cards, and rejects invalid or external drop
   expect(collection.textContent).toBe('Focus group');
   expect(screen.getByRole('button', { name: 'Interpretivism' }).getAttribute('aria-pressed')).toBe('false');
 });
+
+it('keeps reflections separate from placement scores and clears them on scenario restart', async () => {
+  const user = userEvent.setup();
+  render(<StudyBuilder language="en" />);
+  expect(screen.queryByRole('heading', { name: 'Explain your choices' })).toBeNull();
+  for (const [term, slot] of [['Interpretivism', 'Paradigm'], ['Interview', 'Data collection'], ['Thematic analysis', 'Data analysis']]) {
+    await user.click(screen.getByRole('button', { name: term }));
+    await user.click(screen.getByRole('button', { name: `Place: ${slot}` }));
+  }
+  await user.click(screen.getByRole('button', { name: 'Check connections' }));
+  expect(screen.getByRole('heading', { name: 'Explain your choices' })).toBeTruthy();
+  expect(screen.getAllByRole('textbox')).toHaveLength(6);
+  await user.type(screen.getAllByRole('textbox')[0], 'An ungraded reflection');
+  expect(screen.getByText('First attempt: 3 / 3')).toBeTruthy();
+  await user.click(screen.getByRole('button', { name: 'Restart scenario' }));
+  expect(localStorage.getItem('research-cards-sessions')).not.toContain('An ungraded reflection');
+  expect(screen.queryByRole('textbox')).toBeNull();
+  expect(screen.getByLabelText('Completed')).toBeTruthy();
+});

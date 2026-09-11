@@ -85,3 +85,12 @@
 .study-node .slot-target.drop-target:not(:disabled){background:#dcebcf;border:2px solid #285b49;box-shadow:0 0 0 3px #285b4926}
 .paradigm-assumptions{margin-top:24px;padding:20px;background:#edf2e5;border-radius:10px}.paradigm-assumptions h2{font-size:16px;margin-bottom:8px}.paradigm-assumptions>p{font-size:12px;line-height:1.6;color:#53634b}.paradigm-assumptions dl{margin:0}.paradigm-assumptions dl>div+div{margin-top:14px}.paradigm-assumptions dt{font-size:13px;font-weight:700}.paradigm-assumptions dd{margin:5px 0 0;font-size:13px;line-height:1.65}
 @media(min-width:801px){.learning-deck-picker{grid-template-columns:repeat(4,minmax(0,1fr))}}@media(min-width:561px) and (max-width:800px){.learning-deck-picker{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+.study-reflections{margin-top:36px;border-top:1px solid #d4ddcb;padding-top:24px}
+.reflection-card{margin:20px 0;padding:24px;border:1px solid #d4ddcb;border-radius:15px;background:#fffefa;min-width:0}
+.reflection-card h3{margin-top:0}.reflection-card label{display:block;margin:18px 0;line-height:1.6}
+.reflection-card textarea{display:block;width:100%;min-height:100px;margin-top:8px;padding:12px;border:1px solid #829673;border-radius:8px;background:#fff;color:#263f35;font:inherit;line-height:1.5;resize:vertical}
+.reflection-card textarea:focus-visible{outline:3px solid #557a42;outline-offset:3px}
+.reflection-comparison{margin-top:20px;padding:18px;background:#eaf0e1;border-radius:10px;line-height:1.6}
+.reflection-comparison h4{margin:12px 0 6px}.reflection-comparison p{margin:6px 0 16px}
+@media(max-width:600px){.reflection-card{padding:16px}}

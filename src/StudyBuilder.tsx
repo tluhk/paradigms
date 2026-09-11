@@ -1,3 +1,4 @@
+import StudyReflection from './StudyReflection';
 import { createSessionStore, validStudy, type SessionStore } from './storage/sessions';
 import { ConceptReferences } from './References';
 import { useEffect, useRef, useState } from 'react';
@@ -39,6 +40,9 @@ export default function StudyBuilder({ language, sessions: suppliedSessions, onS
   }, [sessions, study.id, answers, checked, locked, firstScore, completed, onStorageError]);
   function reset(next = index, fresh = true) {
     dragged.current = null; setDropTarget(null);
+    if (fresh) for (const slot of Object.keys(studies[next].slots) as StudySlot[]) {
+      for (const choice of studies[next].slots[slot]!) sessions.remove(`reflection:${studies[next].id}:${slot}:${choice.id}`);
+    }
     const saved = fresh ? undefined : sessions.read(`study:${studies[next].id}`, validStudy(studies[next]));
     setIndex(next); setAnswers(saved?.answers ?? studies[next].fixed); setSelected(null); setChecked(saved?.checked ?? false); setLocked(saved?.locked ?? []); setFirstScore(saved?.firstScore ?? null); setInvalid(false);
   }
@@ -125,6 +129,11 @@ export default function StudyBuilder({ language, sessions: suppliedSessions, onS
       {complete && index < studies.length - 1 && <button className="primary" onClick={() => reset(index + 1, false)}>{say('Next scenario →', 'Järgmine olukord →')}</button>}
       <button className="secondary" onClick={() => reset()}>{say('Restart scenario', 'Alusta olukorda uuesti')}</button>
     </div>
+    {checked && <section className="study-reflections" aria-labelledby="reflection-heading">
+      <h2 id="reflection-heading">{say('Explain your choices', 'Põhjenda oma valikuid')}</h2>
+      <p>{say('Move from recognising cards to explaining this study. Use details from the research brief in your own words, then compare with an example. These optional notes are saved with this scenario; they are not automatically graded and do not change your placement score or completion mark.', 'Liigu kaartide äratundmiselt uuringu selgitamiseni. Kasuta oma sõnadega ülesande üksikasju ja võrdle seejärel näitega. Need vabatahtlikud märkmed salvestatakse selle olukorra juurde; neid ei hinnata automaatselt ning need ei muuda paigutuste tulemust ega lõpetamise märki.')}</p>
+      {editable.map(slot => <StudyReflection key={`${study.id}:${slot}:${answers[slot]}`} study={study} slot={slot} choiceId={answers[slot]!} term={card(answers[slot]!).term} language={language} sessions={sessions} onStorageError={onStorageError} />)}
+    </section>}
     <p className="study-note">{say('Scenarios and feedback are teaching examples. References explain the underlying concepts; they do not prescribe a single correct design.', 'Olukorrad ja tagasiside on õppenäited. Viited selgitavad aluseks olevaid mõisteid ega määra ühtainsat õiget uuringukava.')}</p>
     <p className="study-note">{say('Switch scenarios to resume drafts. When browser storage is available, drafts and completion marks survive refresh. Restart scenario clears the current tree but keeps its completion mark.', 'Mustandi jätkamiseks vaheta olukorda. Kui brauseri salvestusruum on saadaval, säilivad mustandid ja lõpetamise märgid ka lehe värskendamisel. Uuesti alustamine tühjendab praeguse puu, kuid säilitab lõpetamise märgi.')}</p>
   </div>;
