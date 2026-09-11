@@ -1,3 +1,4 @@
+import { qualityLessons } from './content/quality';
 import { useEffect, useRef } from 'react';
 import { conceptReferences, references, type Reference, type ReferenceId } from './content/references';
 import { decks } from './content/decks';
@@ -20,6 +21,7 @@ export default function References({ language }: { language: Language }) {
   useEffect(() => { heading.current?.focus(); }, []);
   const say = (en: string, et: string) => language === 'et' ? et : en;
   const groups = [
+    { title: say('Research quality', 'Uuringu kvaliteet'), cards: qualityLessons.map(l => ({ id: l.id, term: l.title[language] })) },
     ...decks.map(deck => ({ title: deck[language], cards: deck.cards[language] })),
     { title: say('Application evaluation', 'Rakenduse hindamine'), cards: evaluationCards.map(p => ({ id: p.id, term: p.term[language] })) },
   ];

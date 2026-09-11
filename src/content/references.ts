@@ -13,6 +13,9 @@ const handbook = (title: string, path: string): Reference => ({
   url: `https://open.library.okstate.edu/gognresearchmethods/${path}/`, kind: 'handbook',
 });
 export const references = {
+  sampling: { authors: 'Baltes, S., & Ralph, P.', year: '2021', title: 'Sampling in Software Engineering Research: A Critical Review and Guidelines', publication: 'Author manuscript, arXiv:2002.07764v6; accepted for Empirical Software Engineering.', url: 'https://arxiv.org/abs/2002.07764v6', kind: 'article' },
+  researchQuality: { authors: 'The Open University', year: 'n.d.', title: '5 Reliability and validity', publication: 'Learning to teach: an introduction to classroom research. OpenLearn.', url: 'https://www.open.edu/openlearn/education-development/learning-teach-introduction-classroom-research/content-section-5', kind: 'guidance' },
+  consent: { authors: 'Office for Human Research Protections', year: 'n.d.', title: 'Informed Consent FAQs', publication: 'U.S. Department of Health and Human Services. U.S. regulatory context; consult local institutional requirements.', url: 'https://www.hhs.gov/ohrp/regulations-and-policy/guidance/faq/informed-consent/index.html', kind: 'guidance' },
   paradigmComparison: { authors: 'Nyein, K. P., Caylor, J. R., Duong, N. S., Fry, T. N., & Wildman, J. L.', year: '2020', title: 'Beyond positivism: Toward a pluralistic approach to studying “real” teams', publication: 'Organizational Psychology Review, 10(2).', url: 'https://journals.sagepub.com/doi/10.1177/2041386620915593', doi: '10.1177/2041386620915593', kind: 'article' },
   criticalRealism: { authors: 'Bygstad, B., Munkvold, B. E., & Volkoff, O.', year: '2016', title: 'Identifying Generative Mechanisms through Affordances: A Framework for Critical Realist Data Analysis', publication: 'Journal of Information Technology, 31(1).', url: 'https://journals.sagepub.com/doi/10.1057/jit.2015.13', doi: '10.1057/jit.2015.13', kind: 'article' },
   postpositivism: handbook('Positivism/Post Positivism', 'chapter/positivism-post-positivism'),
@@ -47,6 +50,12 @@ export const references = {
 export type ReferenceId = keyof typeof references;
 // Shared concept IDs ensure English and Estonian explanations cite the same evidence.
 export const conceptReferences: Record<string, readonly ReferenceId[]> = {
+  'quality-sampling': ['sampling', 'experiments', 'accessibility'],
+  'quality-bias': ['experiments', 'researchQuality', 'paradigmComparison'],
+  'quality-ethics': ['consent', 'experiments'],
+  'quality-measurement': ['researchQuality', 'usability', 'experiments'],
+  'quality-trust': ['researchQuality', 'thematicGuide', 'criticalRealism'],
+  'quality-limits': ['sampling', 'accessibility', 'researchQuality'],
   positivism: ['postpositivism', 'paradigmComparison'],
   constructivism: ['paradigmComparison', 'interpretivism'],
   'critical-realism': ['criticalRealism', 'postpositivism'],

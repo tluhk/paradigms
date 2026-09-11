@@ -12,7 +12,7 @@ Help students progress from recognising terminology to explaining, designing, an
 2. [x] **Resume unfinished work** — persist active learning, matching, placement, and study sessions; retain separate scenario drafts and completions. Restore after refresh and navigation. Opening References must not discard work. Validate stored state and gracefully handle unavailable storage.
 3. [x] **Explain your choice** — add guided justification questions after scenario placements, with explanatory feedback and examples. Distinguish recognising a definition from applying it. Keep first-attempt results separate from retries; do not automatically grade unrestricted writing as factually right or wrong.
 4. [x] **Evaluate connections together** — check data collection against analysis and evaluation against research questions. Explain context-dependent alternatives rather than treating paradigms as exclusive owners of methods. Test combinations, not only individual slots.
-5. [ ] **Research quality decisions** — introduce sampling, participant selection, bias, consent/privacy, validity, reliability/trustworthiness, and limitations through short lessons and scenario choices. Source the material and explain disciplinary differences.
+5. [x] **Research quality decisions** — introduce sampling, participant selection, bias, consent/privacy, validity, reliability/trustworthiness, and limitations through short lessons and scenario choices. Source the material and explain disciplinary differences.
 6. [ ] **Interpret evidence** — add small, explicitly fictional datasets: task times, success rates, errors, interview excerpts. Ask what can be concluded, what cannot, and how findings should inform a prototype revision.
 7. [ ] **Design my own study** — support an application problem, research question, justified paradigm/methodology/methods, participants, evaluation criteria, and limitations. Save drafts; export a readable one-page research plan with references. Clearly distinguish building an artifact from producing research knowledge.
 8. [ ] **Useful progress overview** — show viewed, practised, and completed separately; record scenario completion and suggest concepts to revisit without claiming validated mastery. Provide a clear reset/export experience.
@@ -74,4 +74,17 @@ Sources checked: the Open University handbook’s Positivism/Post Positivism cha
 
 Validation: all 41 tests pass; production build and whitespace checks pass. Seven-card bilingual learning, reference coverage, new scenario play-throughs in both languages (including alternative paradigms), all accepted combinations, and preservation of original card progress are covered. Obsolete four-card paradigm drafts restart safely. No real-browser visual check or external teaching review was performed.
 
-Next remains Step 5, research quality decisions.
+The next planned step at this point was Step 5, delivered below.
+
+
+### Step 5 — Research quality decisions
+
+Status: Implemented and verified with automated tests.
+
+Delivered: six bilingual short lessons covering sampling/participant selection, bias/reflexivity, consent/privacy, validity/reliability, qualitative trustworthiness, and limitations. Each of the nine checked scenarios offers an optional quality-practice panel with four decisions, including a tailored issue for that brief. Immediate explanatory feedback, keyboard controls, retries preserving first answers, and separate quality results are included. Answers and panel visibility persist per scenario through navigation and refresh, with in-memory fallback. Scenario restart clears quality practice. Placement scores and completion remain independent.
+
+Sources checked: Baltes & Ralph’s sampling review (arXiv v6, 2021); Open University’s Reliability and validity lesson; W3C guidance on involving users; OHRP informed-consent FAQs; OpenStax experimental design guidance. References appear alongside lessons/feedback and in the bibliography. The U.S. context of OHRP guidance is stated; the practice does not replace local institutional ethics procedures. Decisions are original teaching examples, not a validated assessment instrument.
+
+Validation: all 46 tests pass; production build and whitespace checks pass. Tests cover all nine scenarios in both languages, source coverage, keyboard input, first-answer preservation on retry, storage validation/failure fallback, References plus reload restoration, and clearing quality practice on restart. No real-browser visual check or external teaching review was performed.
+
+Next: Step 6, interpret fictional evidence and its implications for a prototype.

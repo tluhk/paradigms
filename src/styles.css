@@ -94,3 +94,11 @@
 .reflection-comparison{margin-top:20px;padding:18px;background:#eaf0e1;border-radius:10px;line-height:1.6}
 .reflection-comparison h4{margin:12px 0 6px}.reflection-comparison p{margin:6px 0 16px}
 @media(max-width:600px){.reflection-card{padding:16px}}
+
+.study-quality{margin-top:32px;padding:24px 0;border-top:1px solid #d4ddcb}
+.quality-lesson{padding:16px;margin:12px 0;background:#fffefa;border:1px solid #d4ddcb;border-radius:10px;line-height:1.6}
+.quality-lesson summary{cursor:pointer;font-weight:600}.quality-lesson summary:focus-visible{outline:3px solid #557a42;outline-offset:3px}
+.quality-question{min-width:0}.quality-question legend{max-width:100%;padding:0 8px;font-weight:600;line-height:1.6}
+.quality-options{display:grid;gap:12px}.quality-options button{text-align:left;white-space:normal;line-height:1.5;height:auto;justify-content:flex-start}
+.quality-options button[aria-pressed=true]{border:2px solid #386c55;background:#eaf0e1;color:#263f35;opacity:1}
+.quality-results{padding:16px;background:#eaf0e1;border-radius:10px}

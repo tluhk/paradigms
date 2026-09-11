@@ -1,3 +1,4 @@
+import QualityDecisions from './QualityDecisions';
 import { evaluateConnections, retryStudySlots } from './content/connections';
 import StudyReflection from './StudyReflection';
 import { createSessionStore, validStudy, type SessionStore } from './storage/sessions';
@@ -43,6 +44,7 @@ export default function StudyBuilder({ language, sessions: suppliedSessions, onS
   }, [sessions, study.id, answers, checked, locked, firstScore, completed, onStorageError]);
   function reset(next = index, fresh = true) {
     dragged.current = null; setDropTarget(null);
+    if (fresh) sessions.remove(`quality:${studies[next].id}`);
     if (fresh) for (const slot of Object.keys(studies[next].slots) as StudySlot[]) {
       for (const choice of studies[next].slots[slot]!) sessions.remove(`reflection:${studies[next].id}:${slot}:${choice.id}`);
     }
@@ -142,6 +144,7 @@ export default function StudyBuilder({ language, sessions: suppliedSessions, onS
         <p>{(connection.status === 'fits' ? connection.fits : connection.reconsider)[language]}</p>
       </article>)}
     </section>}
+    {checked && <QualityDecisions key={study.id} studyId={study.id} language={language} sessions={sessions} onStorageError={onStorageError} />}
     {checked && <section className="study-reflections" aria-labelledby="reflection-heading">
       <h2 id="reflection-heading">{say('Explain your choices', 'Põhjenda oma valikuid')}</h2>
       <p>{say('Move from recognising cards to explaining this study. Use details from the research brief in your own words, then compare with an example. These optional notes are saved with this scenario; they are not automatically graded and do not change your placement score or completion mark.', 'Liigu kaartide äratundmiselt uuringu selgitamiseni. Kasuta oma sõnadega ülesande üksikasju ja võrdle seejärel näitega. Need vabatahtlikud märkmed salvestatakse selle olukorra juurde; neid ei hinnata automaatselt ning need ei muuda paigutuste tulemust ega lõpetamise märki.')}</p>
